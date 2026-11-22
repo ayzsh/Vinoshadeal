@@ -1,16 +1,496 @@
 [
-  { "id": "p1", "slug": "zenix-nova-5g-8gb-128gb", "name": "Zenix Nova 5G (8GB RAM, 128GB)", "brand": "Zenix", "categorySlug": "mobiles", "price": 17999, "mrp": 22999, "rating": 4.4, "reviewCount": 2310, "stock": 42, "emoji": "📱", "images": [], "tags": ["trending", "deal"] },
-  { "id": "p2", "slug": "tronix-wireless-earbuds", "name": "Tronix Wireless Earbuds with 30h Battery", "brand": "Tronix", "categorySlug": "electronics", "price": 1299, "mrp": 3999, "rating": 4.2, "reviewCount": 8120, "stock": 120, "emoji": "🎧", "images": [], "tags": ["flash", "trending"] },
-  { "id": "p3", "slug": "aurora-43-inch-4k-smart-tv", "name": "Aurora 43\" 4K Smart LED TV", "brand": "Aurora", "categorySlug": "electronics", "price": 24999, "mrp": 38999, "rating": 4.3, "reviewCount": 960, "stock": 15, "emoji": "📺", "images": [], "tags": ["deal"] },
-  { "id": "p4", "slug": "urbanly-mens-cotton-tshirt", "name": "Urbanly Men's Regular Fit Cotton T-Shirt", "brand": "Urbanly", "categorySlug": "fashion", "price": 399, "mrp": 999, "rating": 4.1, "reviewCount": 5400, "stock": 300, "emoji": "👕", "images": [], "tags": ["flash", "new"] },
-  { "id": "p5", "slug": "kiraa-womens-kurta-set", "name": "Kiraa Women's Printed Kurta with Palazzo", "brand": "Kiraa", "categorySlug": "fashion", "price": 899, "mrp": 2199, "rating": 4.3, "reviewCount": 3120, "stock": 88, "emoji": "👗", "images": [], "tags": ["trending", "deal"] },
-  { "id": "p6", "slug": "pureco-vitamin-c-serum", "name": "Pure&Co Vitamin C Face Serum 30ml", "brand": "Pure&Co", "categorySlug": "beauty", "price": 349, "mrp": 699, "rating": 4.5, "reviewCount": 7700, "stock": 210, "emoji": "🧴", "images": [], "tags": ["new", "trending"] },
-  { "id": "p7", "slug": "bloom-nonstick-cookware-set", "name": "Bloom Non-Stick Cookware Set (3 Pieces)", "brand": "Bloom", "categorySlug": "home-kitchen", "price": 1499, "mrp": 3299, "rating": 4.2, "reviewCount": 1980, "stock": 64, "emoji": "🍳", "images": [], "tags": ["deal", "flash"] },
-  { "id": "p8", "slug": "nova-mixer-grinder-750w", "name": "Nova Mixer Grinder 750W with 3 Jars", "brand": "Nova", "categorySlug": "appliances", "price": 2799, "mrp": 4999, "rating": 4.4, "reviewCount": 4210, "stock": 53, "emoji": "🥤", "images": [], "tags": ["deal", "trending"] },
-  { "id": "p9", "slug": "farmfresh-basmati-rice-5kg", "name": "FarmFresh Premium Basmati Rice 5kg", "brand": "FarmFresh", "categorySlug": "groceries", "price": 549, "mrp": 799, "rating": 4.6, "reviewCount": 6500, "stock": 500, "emoji": "🍚", "images": [], "tags": ["deal"] },
-  { "id": "p10", "slug": "readly-startup-playbook", "name": "The Startup Playbook (Paperback)", "brand": "Readly", "categorySlug": "books", "price": 299, "mrp": 499, "rating": 4.5, "reviewCount": 890, "stock": 140, "emoji": "📘", "images": [], "tags": ["new"] },
-  { "id": "p11", "slug": "playo-building-blocks-500", "name": "Playo Building Blocks Set, 500 Pieces", "brand": "Playo", "categorySlug": "toys", "price": 599, "mrp": 1199, "rating": 4.4, "reviewCount": 2050, "stock": 97, "emoji": "🧱", "images": [], "tags": ["new", "deal"] },
-  { "id": "p12", "slug": "strider-yoga-mat-6mm", "name": "Strider Anti-Slip Yoga Mat 6mm", "brand": "Strider", "categorySlug": "sports", "price": 499, "mrp": 1299, "rating": 4.3, "reviewCount": 3340, "stock": 180, "emoji": "🧘", "images": [], "tags": ["flash", "new"] },
-  { "id": "p13", "slug": "tronix-fit-smartwatch", "name": "Tronix Fit Smartwatch with AMOLED Display", "brand": "Tronix", "categorySlug": "electronics", "price": 1999, "mrp": 5999, "rating": 4.1, "reviewCount": 9100, "stock": 75, "emoji": "⌚", "images": [], "tags": ["trending", "flash"] },
-  { "id": "p14", "slug": "zenix-20000mah-power-bank", "name": "Zenix 20000mAh Fast Charging Power Bank", "brand": "Zenix", "categorySlug": "mobiles", "price": 899, "mrp": 1999, "rating": 4.2, "reviewCount": 4380, "stock": 160, "emoji": "🔋", "images": [], "tags": ["new", "deal"] }
+  {
+    "id": "p01", "slug": "zenix-nova-5g-8gb-128gb", "name": "Zenix Nova 5G (8GB RAM, 128GB)", "brand": "Zenix",
+    "categorySlug": "mobiles", "subcategory": "Smartphones", "price": 17999, "mrp": 22999, "rating": 4.4, "reviewCount": 2310,
+    "stock": 42, "emoji": "📱", "images": [], "tags": ["deal", "trending"], "createdAt": "2026-09-12",
+    "description": "A 5G smartphone with a bright 6.6-inch 120Hz display, 50MP camera and a 5000mAh battery that easily lasts a full day.",
+    "specs": [
+      { "key": "Display", "value": "6.6-inch FHD+ 120Hz" },
+      { "key": "Processor", "value": "Octa-core 5G" },
+      { "key": "Camera", "value": "50MP + 2MP rear, 16MP front" },
+      { "key": "Battery", "value": "5000mAh, 33W fast charging" }
+    ],
+    "variants": [
+      { "name": "Storage", "options": [{ "label": "128GB" }, { "label": "256GB", "priceDelta": 2500, "mrpDelta": 3000 }] },
+      { "name": "Colour", "options": [{ "label": "Midnight Blue" }, { "label": "Silver Mist" }] }
+    ]
+  },
+  {
+    "id": "p02", "slug": "zenix-20000mah-power-bank", "name": "Zenix 20000mAh Fast Charging Power Bank", "brand": "Zenix",
+    "categorySlug": "mobiles", "subcategory": "Power Banks", "price": 899, "mrp": 1999, "rating": 4.2, "reviewCount": 4380,
+    "stock": 120, "emoji": "🔋", "images": [], "tags": ["deal", "new"], "createdAt": "2026-11-05",
+    "description": "Slim 20000mAh power bank with 22.5W fast charging and two USB ports, so you can charge two devices together.",
+    "specs": [
+      { "key": "Capacity", "value": "20000mAh" },
+      { "key": "Output", "value": "22.5W fast charging" },
+      { "key": "Ports", "value": "2 x USB-A, 1 x Type-C" },
+      { "key": "Warranty", "value": "6 months" }
+    ],
+    "variants": [{ "name": "Colour", "options": [{ "label": "Black" }, { "label": "White" }] }]
+  },
+  {
+    "id": "p03", "slug": "casely-shockproof-clear-case", "name": "Casely Shockproof Clear Case for Zenix Nova 5G", "brand": "Casely",
+    "categorySlug": "mobiles", "subcategory": "Cases & Covers", "price": 249, "mrp": 599, "rating": 4.0, "reviewCount": 1260,
+    "stock": 150, "emoji": "🛡️", "images": [], "tags": [], "createdAt": "2026-08-20",
+    "description": "Crystal-clear back cover with raised corners to protect your phone from drops and scratches.",
+    "specs": [
+      { "key": "Material", "value": "Soft TPU + hard PC back" },
+      { "key": "Fits", "value": "Zenix Nova 5G" },
+      { "key": "Feature", "value": "Raised camera and screen edges" }
+    ]
+  },
+  {
+    "id": "p04", "slug": "chargix-65w-gan-charger", "name": "Chargix 65W GaN Fast Charger with Type-C Cable", "brand": "Chargix",
+    "categorySlug": "mobiles", "subcategory": "Chargers & Cables", "price": 1199, "mrp": 2499, "rating": 4.3, "reviewCount": 2780,
+    "stock": 90, "emoji": "🔌", "images": [], "tags": ["deal"], "createdAt": "2026-10-02",
+    "description": "Compact 65W charger that fast-charges phones, tablets and even small laptops. Cable included.",
+    "specs": [
+      { "key": "Power", "value": "65W maximum" },
+      { "key": "Ports", "value": "2 x Type-C, 1 x USB-A" },
+      { "key": "Cable", "value": "1m Type-C to Type-C" },
+      { "key": "Warranty", "value": "1 year" }
+    ]
+  },
+  {
+    "id": "p05", "slug": "tronix-wireless-earbuds", "name": "Tronix Wireless Earbuds with 30h Battery", "brand": "Tronix",
+    "categorySlug": "electronics", "subcategory": "Headphones & Earbuds", "price": 1299, "mrp": 3999, "rating": 4.2, "reviewCount": 8120,
+    "stock": 250, "emoji": "🎧", "images": [], "tags": ["flash", "trending"], "createdAt": "2026-09-25",
+    "description": "True wireless earbuds with deep bass, noise-reducing calls and up to 30 hours of playback with the charging case.",
+    "specs": [
+      { "key": "Battery", "value": "30h with case, 7h per charge" },
+      { "key": "Bluetooth", "value": "5.3" },
+      { "key": "Water resistance", "value": "IPX4" },
+      { "key": "Warranty", "value": "1 year" }
+    ],
+    "variants": [{ "name": "Colour", "options": [{ "label": "Black" }, { "label": "White" }, { "label": "Teal" }] }]
+  },
+  {
+    "id": "p06", "slug": "tronix-fit-smartwatch", "name": "Tronix Fit Smartwatch with AMOLED Display", "brand": "Tronix",
+    "categorySlug": "electronics", "subcategory": "Smartwatches", "price": 1999, "mrp": 5999, "rating": 4.1, "reviewCount": 9100,
+    "stock": 6, "emoji": "⌚", "images": [], "tags": ["flash", "trending"], "createdAt": "2026-09-30",
+    "description": "Bright 1.8-inch AMOLED smartwatch with heart-rate and sleep tracking, 100+ sports modes and Bluetooth calling.",
+    "specs": [
+      { "key": "Display", "value": "1.8-inch AMOLED" },
+      { "key": "Battery", "value": "Up to 7 days" },
+      { "key": "Water resistance", "value": "IP68" },
+      { "key": "Features", "value": "Heart rate, SpO2, sleep, calls" }
+    ],
+    "variants": [{ "name": "Strap colour", "options": [{ "label": "Charcoal" }, { "label": "Wine Red" }, { "label": "Olive" }] }]
+  },
+  {
+    "id": "p07", "slug": "aurora-43-inch-4k-smart-tv", "name": "Aurora 43\" 4K Smart LED TV", "brand": "Aurora",
+    "categorySlug": "electronics", "subcategory": "Televisions", "price": 24999, "mrp": 38999, "rating": 4.3, "reviewCount": 960,
+    "stock": 14, "emoji": "📺", "images": [], "tags": ["deal"], "createdAt": "2026-07-18",
+    "description": "43-inch Ultra HD smart TV with built-in streaming apps, Dolby audio and three HDMI ports.",
+    "specs": [
+      { "key": "Screen size", "value": "43 inch (108 cm)" },
+      { "key": "Resolution", "value": "4K Ultra HD (3840 x 2160)" },
+      { "key": "Sound", "value": "24W, Dolby Audio" },
+      { "key": "Ports", "value": "3 x HDMI, 2 x USB" },
+      { "key": "Warranty", "value": "1 year on product, 2 years on panel" }
+    ]
+  },
+  {
+    "id": "p08", "slug": "boomio-portable-bluetooth-speaker", "name": "Boomio Portable Bluetooth Speaker 20W", "brand": "Boomio",
+    "categorySlug": "electronics", "subcategory": "Speakers", "price": 1499, "mrp": 3499, "rating": 4.2, "reviewCount": 3560,
+    "stock": 70, "emoji": "🔊", "images": [], "tags": ["trending"], "createdAt": "2026-10-14",
+    "description": "Splash-proof 20W speaker with strong bass, 12 hours of playtime and a handy carry strap.",
+    "specs": [
+      { "key": "Output", "value": "20W" },
+      { "key": "Playtime", "value": "Up to 12 hours" },
+      { "key": "Water resistance", "value": "IPX5" }
+    ],
+    "variants": [{ "name": "Colour", "options": [{ "label": "Black" }, { "label": "Sky Blue" }] }]
+  },
+  {
+    "id": "p09", "slug": "voltix-bluetooth-neckband-40h", "name": "Voltix Bluetooth Neckband with 40h Playback", "brand": "Voltix",
+    "categorySlug": "electronics", "subcategory": "Headphones & Earbuds", "price": 799, "mrp": 1999, "rating": 4.0, "reviewCount": 5210,
+    "stock": 180, "emoji": "🎧", "images": [], "tags": [], "createdAt": "2026-06-10",
+    "description": "Lightweight neckband earphones with magnetic buds, fast charging and up to 40 hours of music.",
+    "specs": [
+      { "key": "Playback", "value": "Up to 40 hours" },
+      { "key": "Charging", "value": "10 min charge = 10h play" },
+      { "key": "Bluetooth", "value": "5.2" }
+    ]
+  },
+  {
+    "id": "p10", "slug": "urbanly-mens-cotton-tshirt", "name": "Urbanly Men's Regular Fit Cotton T-Shirt", "brand": "Urbanly",
+    "categorySlug": "fashion", "subcategory": "Men", "price": 399, "mrp": 999, "rating": 4.1, "reviewCount": 5400,
+    "stock": 300, "emoji": "👕", "images": [], "tags": ["flash", "new"], "createdAt": "2026-11-10",
+    "description": "Soft, breathable 100% cotton round-neck T-shirt with a regular fit. Easy to wear every day.",
+    "specs": [
+      { "key": "Fabric", "value": "100% cotton, 180 GSM" },
+      { "key": "Fit", "value": "Regular" },
+      { "key": "Care", "value": "Machine wash cold" }
+    ],
+    "variants": [
+      { "name": "Size", "options": [{ "label": "S" }, { "label": "M" }, { "label": "L" }, { "label": "XL", "priceDelta": 30, "mrpDelta": 30 }] },
+      { "name": "Colour", "options": [{ "label": "Navy" }, { "label": "Black" }, { "label": "Maroon" }] }
+    ]
+  },
+  {
+    "id": "p11", "slug": "kiraa-womens-kurta-set", "name": "Kiraa Women's Printed Kurta with Palazzo", "brand": "Kiraa",
+    "categorySlug": "fashion", "subcategory": "Women", "price": 899, "mrp": 2199, "rating": 4.3, "reviewCount": 3120,
+    "stock": 85, "emoji": "👗", "images": [], "tags": ["deal", "trending"], "createdAt": "2026-10-20",
+    "description": "Comfortable printed kurta and palazzo set in a soft rayon blend. Perfect for festive and office wear.",
+    "specs": [
+      { "key": "Fabric", "value": "Rayon blend" },
+      { "key": "Set includes", "value": "Kurta and palazzo" },
+      { "key": "Care", "value": "Hand wash or gentle machine wash" }
+    ],
+    "variants": [{ "name": "Size", "options": [{ "label": "S" }, { "label": "M" }, { "label": "L" }, { "label": "XL" }] }]
+  },
+  {
+    "id": "p12", "slug": "littlehops-kids-cotton-pyjama-set", "name": "Little Hops Kids Cotton Pyjama Set (2 Pieces)", "brand": "Little Hops",
+    "categorySlug": "fashion", "subcategory": "Kids", "price": 449, "mrp": 899, "rating": 4.2, "reviewCount": 1450,
+    "stock": 60, "emoji": "🧒", "images": [], "tags": [], "createdAt": "2026-08-02",
+    "description": "Cosy cotton top and pyjama set with a gentle elastic waist, made for sleep and play.",
+    "specs": [
+      { "key": "Fabric", "value": "100% combed cotton" },
+      { "key": "Age range", "value": "3 to 8 years" },
+      { "key": "Care", "value": "Machine wash" }
+    ],
+    "variants": [{ "name": "Age", "options": [{ "label": "3-4 yrs" }, { "label": "5-6 yrs" }, { "label": "7-8 yrs", "priceDelta": 50, "mrpDelta": 100 }] }]
+  },
+  {
+    "id": "p13", "slug": "stridewell-mens-running-shoes", "name": "Stridewell Men's Lightweight Running Shoes", "brand": "Stridewell",
+    "categorySlug": "fashion", "subcategory": "Footwear", "price": 1299, "mrp": 2999, "rating": 4.2, "reviewCount": 4100,
+    "stock": 40, "emoji": "👟", "images": [], "tags": ["deal"], "createdAt": "2026-09-08",
+    "description": "Breathable mesh running shoes with a cushioned sole and good grip for roads and treadmills.",
+    "specs": [
+      { "key": "Upper", "value": "Breathable mesh" },
+      { "key": "Sole", "value": "EVA cushioned, anti-slip" },
+      { "key": "Use", "value": "Running, gym, walking" }
+    ],
+    "variants": [{ "name": "Size (UK)", "options": [{ "label": "7" }, { "label": "8" }, { "label": "9" }, { "label": "10" }] }]
+  },
+  {
+    "id": "p14", "slug": "packly-laptop-backpack-30l", "name": "Packly 30L Laptop Backpack with USB Port", "brand": "Packly",
+    "categorySlug": "fashion", "subcategory": "Bags", "price": 899, "mrp": 2199, "rating": 4.3, "reviewCount": 2670,
+    "stock": 55, "emoji": "🎒", "images": [], "tags": ["trending"], "createdAt": "2026-10-28",
+    "description": "Water-resistant 30L backpack with a padded laptop section (up to 15.6 inch) and an external USB charging port.",
+    "specs": [
+      { "key": "Capacity", "value": "30 litres" },
+      { "key": "Laptop fit", "value": "Up to 15.6 inch" },
+      { "key": "Material", "value": "Water-resistant polyester" }
+    ],
+    "variants": [{ "name": "Colour", "options": [{ "label": "Grey" }, { "label": "Black" }, { "label": "Blue" }] }]
+  },
+  {
+    "id": "p15", "slug": "bloom-nonstick-cookware-set", "name": "Bloom Non-Stick Cookware Set (3 Pieces)", "brand": "Bloom",
+    "categorySlug": "home-kitchen", "subcategory": "Cookware", "price": 1499, "mrp": 3299, "rating": 4.2, "reviewCount": 1980,
+    "stock": 48, "emoji": "🍳", "images": [], "tags": ["flash", "deal"], "createdAt": "2026-08-15",
+    "description": "Non-stick fry pan, kadhai and tawa set with cool-touch handles. Works on gas and induction.",
+    "specs": [
+      { "key": "Pieces", "value": "Fry pan, kadhai, tawa" },
+      { "key": "Coating", "value": "3-layer non-stick" },
+      { "key": "Compatible with", "value": "Gas and induction" }
+    ]
+  },
+  {
+    "id": "p16", "slug": "storely-airtight-container-set-6", "name": "Storely Airtight Container Set (6 Pieces)", "brand": "Storely",
+    "categorySlug": "home-kitchen", "subcategory": "Storage", "price": 599, "mrp": 1299, "rating": 4.3, "reviewCount": 3890,
+    "stock": 120, "emoji": "🥫", "images": [], "tags": [], "createdAt": "2026-07-04",
+    "description": "BPA-free airtight containers in six sizes to keep dal, rice, snacks and spices fresh for longer.",
+    "specs": [
+      { "key": "Pieces", "value": "6 (3 sizes x 2)" },
+      { "key": "Material", "value": "BPA-free food-grade plastic" },
+      { "key": "Lid", "value": "Airtight, easy-lock" }
+    ]
+  },
+  {
+    "id": "p17", "slug": "cozyloom-cotton-double-bedsheet", "name": "Cozyloom Cotton Double Bedsheet with 2 Pillow Covers", "brand": "Cozyloom",
+    "categorySlug": "home-kitchen", "subcategory": "Furnishing", "price": 699, "mrp": 1799, "rating": 4.1, "reviewCount": 2330,
+    "stock": 4, "emoji": "🛏️", "images": [], "tags": [], "createdAt": "2026-08-28",
+    "description": "Soft, colour-fast cotton bedsheet for a double bed with two matching pillow covers.",
+    "specs": [
+      { "key": "Size", "value": "Double bed (90 x 100 inch)" },
+      { "key": "Fabric", "value": "144 TC cotton" },
+      { "key": "Includes", "value": "1 bedsheet, 2 pillow covers" }
+    ],
+    "variants": [{ "name": "Colour", "options": [{ "label": "Sky Floral" }, { "label": "Beige Paisley" }, { "label": "Teal Stripe" }] }]
+  },
+  {
+    "id": "p18", "slug": "decora-nest-ceramic-vase-set", "name": "Decora Nest Ceramic Flower Vase Set of 3", "brand": "Decora Nest",
+    "categorySlug": "home-kitchen", "subcategory": "Decor", "price": 499, "mrp": 999, "rating": 4.2, "reviewCount": 640,
+    "stock": 35, "emoji": "🏺", "images": [], "tags": ["new"], "createdAt": "2026-11-14",
+    "description": "Three hand-finished ceramic vases in matching tones. Looks great on a shelf, table or console.",
+    "specs": [
+      { "key": "Pieces", "value": "3 vases" },
+      { "key": "Material", "value": "Ceramic" },
+      { "key": "Height", "value": "15 cm, 20 cm, 25 cm" }
+    ]
+  },
+  {
+    "id": "p19", "slug": "pureco-vitamin-c-serum", "name": "Pure&Co Vitamin C Face Serum 30ml", "brand": "Pure&Co",
+    "categorySlug": "beauty", "subcategory": "Skincare", "price": 349, "mrp": 699, "rating": 4.5, "reviewCount": 7700,
+    "stock": 5, "emoji": "🧴", "images": [], "tags": ["trending", "new"], "createdAt": "2026-11-08",
+    "description": "Lightweight 10% Vitamin C serum with hyaluronic acid for a brighter, smoother look. Suits all skin types.",
+    "specs": [
+      { "key": "Key ingredients", "value": "Vitamin C 10%, hyaluronic acid" },
+      { "key": "Skin type", "value": "All skin types" },
+      { "key": "Use", "value": "Morning or night, 2-3 drops" }
+    ],
+    "variants": [{ "name": "Size", "options": [{ "label": "30ml" }, { "label": "50ml", "priceDelta": 200, "mrpDelta": 300 }] }]
+  },
+  {
+    "id": "p20", "slug": "lustra-argan-hair-oil-200ml", "name": "Lustra Argan Hair Oil 200ml", "brand": "Lustra",
+    "categorySlug": "beauty", "subcategory": "Hair Care", "price": 299, "mrp": 549, "rating": 4.3, "reviewCount": 4120,
+    "stock": 140, "emoji": "💆", "images": [], "tags": [], "createdAt": "2026-07-22",
+    "description": "Non-sticky argan hair oil that helps control frizz and adds shine without weighing hair down.",
+    "specs": [
+      { "key": "Quantity", "value": "200ml" },
+      { "key": "Hair type", "value": "All hair types" },
+      { "key": "Free from", "value": "Mineral oil, parabens" }
+    ]
+  },
+  {
+    "id": "p21", "slug": "glowberry-matte-lipstick", "name": "Glowberry Long-Wear Matte Lipstick", "brand": "Glowberry",
+    "categorySlug": "beauty", "subcategory": "Makeup", "price": 249, "mrp": 499, "rating": 4.1, "reviewCount": 2980,
+    "stock": 210, "emoji": "💄", "images": [], "tags": [], "createdAt": "2026-09-18",
+    "description": "Creamy matte lipstick with rich colour that stays put for hours and feels comfortable on the lips.",
+    "specs": [
+      { "key": "Finish", "value": "Matte" },
+      { "key": "Weight", "value": "3.5g" },
+      { "key": "Wear", "value": "Up to 8 hours" }
+    ],
+    "variants": [{ "name": "Shade", "options": [{ "label": "Rosewood" }, { "label": "Cherry Red" }, { "label": "Nude Pink" }] }]
+  },
+  {
+    "id": "p22", "slug": "scentora-eau-de-parfum-100ml", "name": "Scentora Floral Eau de Parfum 100ml", "brand": "Scentora",
+    "categorySlug": "beauty", "subcategory": "Fragrances", "price": 799, "mrp": 1999, "rating": 4.4, "reviewCount": 1760,
+    "stock": 66, "emoji": "🌸", "images": [], "tags": ["new", "trending"], "createdAt": "2026-11-12",
+    "description": "A fresh floral perfume with notes of jasmine and sandalwood. Long lasting and easy to wear.",
+    "specs": [
+      { "key": "Quantity", "value": "100ml" },
+      { "key": "Type", "value": "Eau de Parfum" },
+      { "key": "Notes", "value": "Jasmine, sandalwood, musk" }
+    ]
+  },
+  {
+    "id": "p23", "slug": "farmfresh-basmati-rice-5kg", "name": "FarmFresh Premium Basmati Rice 5kg", "brand": "FarmFresh",
+    "categorySlug": "groceries", "subcategory": "Staples", "price": 549, "mrp": 799, "rating": 4.6, "reviewCount": 6500,
+    "stock": 200, "emoji": "🍚", "images": [], "tags": ["deal"], "createdAt": "2026-06-25",
+    "description": "Aged long-grain basmati rice that cooks fluffy and fragrant. Ideal for biryani and pulao.",
+    "specs": [
+      { "key": "Pack size", "value": "5 kg" },
+      { "key": "Grain", "value": "Extra long, aged" },
+      { "key": "Shelf life", "value": "12 months" }
+    ],
+    "variants": [{ "name": "Pack size", "options": [{ "label": "5kg" }, { "label": "10kg", "priceDelta": 520, "mrpDelta": 750 }] }]
+  },
+  {
+    "id": "p24", "slug": "crunchies-roasted-masala-peanuts", "name": "Crunchies Roasted Masala Peanuts 400g (Pack of 2)", "brand": "Crunchies",
+    "categorySlug": "groceries", "subcategory": "Snacks", "price": 199, "mrp": 299, "rating": 4.2, "reviewCount": 2210,
+    "stock": 300, "emoji": "🥜", "images": [], "tags": [], "createdAt": "2026-10-09",
+    "description": "Crunchy roasted peanuts coated in a tangy masala. Two 200g packs in one order.",
+    "specs": [
+      { "key": "Pack", "value": "2 x 200g" },
+      { "key": "Type", "value": "Vegetarian" },
+      { "key": "Shelf life", "value": "6 months" }
+    ]
+  },
+  {
+    "id": "p25", "slug": "chaikart-strong-assam-tea-500g", "name": "ChaiKart Strong Assam Tea Leaf 500g", "brand": "ChaiKart",
+    "categorySlug": "groceries", "subcategory": "Beverages", "price": 229, "mrp": 329, "rating": 4.5, "reviewCount": 5100,
+    "stock": 180, "emoji": "🍵", "images": [], "tags": ["deal"], "createdAt": "2026-07-30",
+    "description": "Bold, rich Assam tea leaves for a strong cup of masala chai or plain milk tea.",
+    "specs": [
+      { "key": "Weight", "value": "500g" },
+      { "key": "Type", "value": "CTC leaf tea" },
+      { "key": "Shelf life", "value": "12 months" }
+    ]
+  },
+  {
+    "id": "p26", "slug": "dairydew-farm-fresh-eggs-30", "name": "DairyDew Farm Fresh Eggs (Tray of 30)", "brand": "DairyDew",
+    "categorySlug": "groceries", "subcategory": "Dairy & Eggs", "price": 219, "mrp": 259, "rating": 4.3, "reviewCount": 1130,
+    "stock": 25, "emoji": "🥚", "images": [], "tags": [], "createdAt": "2026-11-18",
+    "description": "Fresh white eggs packed in a protective tray. Rich in protein and great for everyday cooking.",
+    "specs": [
+      { "key": "Quantity", "value": "30 eggs" },
+      { "key": "Type", "value": "White, medium size" },
+      { "key": "Storage", "value": "Keep in a cool place" }
+    ]
+  },
+  {
+    "id": "p27", "slug": "nova-mixer-grinder-750w", "name": "Nova Mixer Grinder 750W with 3 Jars", "brand": "Nova",
+    "categorySlug": "appliances", "subcategory": "Kitchen Appliances", "price": 2799, "mrp": 4999, "rating": 4.4, "reviewCount": 4210,
+    "stock": 33, "emoji": "🥤", "images": [], "tags": ["deal", "trending"], "createdAt": "2026-08-10",
+    "description": "Powerful 750W mixer grinder with three stainless steel jars for grinding, blending and chutneys.",
+    "specs": [
+      { "key": "Power", "value": "750W" },
+      { "key": "Jars", "value": "3 stainless steel jars" },
+      { "key": "Speed", "value": "3 speeds + pulse" },
+      { "key": "Warranty", "value": "2 years on product, 5 years on motor" }
+    ]
+  },
+  {
+    "id": "p28", "slug": "breezo-pedestal-fan-400mm", "name": "Breezo 400mm Pedestal Fan with Remote", "brand": "Breezo",
+    "categorySlug": "appliances", "subcategory": "Fans & Coolers", "price": 2199, "mrp": 3999, "rating": 4.2, "reviewCount": 2890,
+    "stock": 28, "emoji": "🌀", "images": [], "tags": [], "createdAt": "2026-05-20",
+    "description": "Height-adjustable pedestal fan with a quiet motor, 3 speeds, oscillation and a remote control.",
+    "specs": [
+      { "key": "Sweep", "value": "400mm" },
+      { "key": "Speed", "value": "3 speeds with remote" },
+      { "key": "Warranty", "value": "2 years" }
+    ]
+  },
+  {
+    "id": "p29", "slug": "pressto-steam-iron-1400w", "name": "Pressto 1400W Steam Iron with Non-Stick Soleplate", "brand": "Pressto",
+    "categorySlug": "appliances", "subcategory": "Irons", "price": 899, "mrp": 1799, "rating": 4.1, "reviewCount": 3340,
+    "stock": 52, "emoji": "👔", "images": [], "tags": [], "createdAt": "2026-06-05",
+    "description": "Fast-heating steam iron that removes stubborn creases, with a smooth non-stick soleplate.",
+    "specs": [
+      { "key": "Power", "value": "1400W" },
+      { "key": "Soleplate", "value": "Non-stick" },
+      { "key": "Water tank", "value": "280ml" }
+    ]
+  },
+  {
+    "id": "p30", "slug": "warmo-instant-water-geyser-3l", "name": "Warmo 3L Instant Water Heater", "brand": "Warmo",
+    "categorySlug": "appliances", "subcategory": "Water Heaters", "price": 2499, "mrp": 4999, "rating": 4.3, "reviewCount": 1640,
+    "stock": 18, "emoji": "🚿", "images": [], "tags": [], "createdAt": "2026-10-25",
+    "description": "Compact 3-litre instant geyser for kitchens and wash basins with a rust-proof tank and safety valve.",
+    "specs": [
+      { "key": "Capacity", "value": "3 litres" },
+      { "key": "Power", "value": "3000W" },
+      { "key": "Warranty", "value": "2 years" }
+    ]
+  },
+  {
+    "id": "p31", "slug": "readly-startup-playbook", "name": "The Startup Playbook (Paperback)", "brand": "Readly",
+    "categorySlug": "books", "subcategory": "Business", "price": 299, "mrp": 499, "rating": 4.5, "reviewCount": 890,
+    "stock": 60, "emoji": "📘", "images": [], "tags": ["new"], "createdAt": "2026-11-02",
+    "description": "A practical guide to starting a small business in India, from first idea to first hundred customers.",
+    "specs": [
+      { "key": "Format", "value": "Paperback" },
+      { "key": "Pages", "value": "288" },
+      { "key": "Language", "value": "English" }
+    ]
+  },
+  {
+    "id": "p32", "slug": "inkwell-civil-services-prelims-workbook", "name": "Civil Services Prelims Practice Workbook", "brand": "Inkwell Press",
+    "categorySlug": "books", "subcategory": "Exam Prep", "price": 449, "mrp": 799, "rating": 4.4, "reviewCount": 1980,
+    "stock": 90, "emoji": "📝", "images": [], "tags": [], "createdAt": "2026-07-12",
+    "description": "Over 2000 practice questions with detailed answers and topic-wise tests for exam preparation.",
+    "specs": [
+      { "key": "Format", "value": "Paperback" },
+      { "key": "Pages", "value": "620" },
+      { "key": "Language", "value": "English" }
+    ]
+  },
+  {
+    "id": "p33", "slug": "inkwell-letters-from-the-monsoon-coast", "name": "Letters from the Monsoon Coast (Novel)", "brand": "Inkwell Press",
+    "categorySlug": "books", "subcategory": "Fiction", "price": 249, "mrp": 399, "rating": 4.4, "reviewCount": 760,
+    "stock": 45, "emoji": "📖", "images": [], "tags": ["new"], "createdAt": "2026-11-16",
+    "description": "A warm, slow-burning family story set in a small coastal town during one long monsoon.",
+    "specs": [
+      { "key": "Format", "value": "Paperback" },
+      { "key": "Pages", "value": "340" },
+      { "key": "Language", "value": "English" }
+    ]
+  },
+  {
+    "id": "p34", "slug": "littleleaf-tales-from-the-banyan-tree", "name": "Tales from the Banyan Tree: Illustrated Stories", "brand": "Little Leaf",
+    "categorySlug": "books", "subcategory": "Children", "price": 199, "mrp": 349, "rating": 4.6, "reviewCount": 1320,
+    "stock": 110, "emoji": "🌳", "images": [], "tags": [], "createdAt": "2026-09-02",
+    "description": "Twelve colourful short stories with big pictures, perfect for bedtime reading for ages 4 to 8.",
+    "specs": [
+      { "key": "Format", "value": "Paperback, full colour" },
+      { "key": "Age", "value": "4 to 8 years" },
+      { "key": "Pages", "value": "96" }
+    ]
+  },
+  {
+    "id": "p35", "slug": "playo-building-blocks-500", "name": "Playo Building Blocks Set, 500 Pieces", "brand": "Playo",
+    "categorySlug": "toys", "subcategory": "Building Blocks", "price": 599, "mrp": 1199, "rating": 4.4, "reviewCount": 2050,
+    "stock": 3, "emoji": "🧱", "images": [], "tags": ["deal", "new"], "createdAt": "2026-11-06",
+    "description": "500 colourful interlocking blocks to build houses, cars and anything your child imagines.",
+    "specs": [
+      { "key": "Pieces", "value": "500" },
+      { "key": "Age", "value": "4 years and above" },
+      { "key": "Material", "value": "Non-toxic ABS plastic" }
+    ]
+  },
+  {
+    "id": "p36", "slug": "boardly-family-trade-board-game", "name": "Boardly Family Trade Board Game", "brand": "Boardly",
+    "categorySlug": "toys", "subcategory": "Board Games", "price": 449, "mrp": 899, "rating": 4.2, "reviewCount": 1870,
+    "stock": 80, "emoji": "🎲", "images": [], "tags": [], "createdAt": "2026-08-24",
+    "description": "A classic buy-and-trade board game for 2 to 6 players. Great for family evenings and holidays.",
+    "specs": [
+      { "key": "Players", "value": "2 to 6" },
+      { "key": "Age", "value": "8 years and above" },
+      { "key": "Play time", "value": "45 to 90 minutes" }
+    ]
+  },
+  {
+    "id": "p37", "slug": "cuddlo-teddy-bear-60cm", "name": "Cuddlo Soft Teddy Bear 60cm", "brand": "Cuddlo",
+    "categorySlug": "toys", "subcategory": "Soft Toys", "price": 549, "mrp": 1299, "rating": 4.5, "reviewCount": 2460,
+    "stock": 40, "emoji": "🧸", "images": [], "tags": [], "createdAt": "2026-10-05",
+    "description": "Super soft and huggable 60cm teddy bear. A lovely gift for birthdays and festivals.",
+    "specs": [
+      { "key": "Height", "value": "60 cm" },
+      { "key": "Material", "value": "Soft plush, polyester filling" },
+      { "key": "Care", "value": "Surface wash" }
+    ],
+    "variants": [{ "name": "Colour", "options": [{ "label": "Brown" }, { "label": "Pink" }, { "label": "Cream" }] }]
+  },
+  {
+    "id": "p38", "slug": "zoomies-rc-stunt-car", "name": "Zoomies Rechargeable RC Stunt Car", "brand": "Zoomies",
+    "categorySlug": "toys", "subcategory": "Remote Control", "price": 899, "mrp": 1999, "rating": 4.1, "reviewCount": 1530,
+    "stock": 0, "emoji": "🚗", "images": [], "tags": [], "createdAt": "2026-09-14",
+    "description": "Fast RC car that can flip, spin and drive on any surface. Comes with a rechargeable battery and remote.",
+    "specs": [
+      { "key": "Range", "value": "Up to 30 metres" },
+      { "key": "Battery", "value": "Rechargeable, 40 min play time" },
+      { "key": "Age", "value": "6 years and above" }
+    ]
+  },
+  {
+    "id": "p39", "slug": "strider-yoga-mat-6mm", "name": "Strider Anti-Slip Yoga Mat 6mm", "brand": "Strider",
+    "categorySlug": "sports", "subcategory": "Yoga", "price": 499, "mrp": 1299, "rating": 4.3, "reviewCount": 3340,
+    "stock": 75, "emoji": "🧘", "images": [], "tags": ["flash", "new"], "createdAt": "2026-11-09",
+    "description": "6mm thick, anti-slip yoga mat that gives good cushioning for yoga, stretching and floor workouts.",
+    "specs": [
+      { "key": "Thickness", "value": "6 mm" },
+      { "key": "Size", "value": "183 x 61 cm" },
+      { "key": "Material", "value": "Eco-friendly TPE" }
+    ],
+    "variants": [{ "name": "Colour", "options": [{ "label": "Purple" }, { "label": "Teal" }, { "label": "Grey" }] }]
+  },
+  {
+    "id": "p40", "slug": "fitforge-rubber-hex-dumbbell-pair-5kg", "name": "FitForge Rubber Hex Dumbbell Pair (2 x 5kg)", "brand": "FitForge",
+    "categorySlug": "sports", "subcategory": "Fitness", "price": 999, "mrp": 1999, "rating": 4.3, "reviewCount": 1340,
+    "stock": 30, "emoji": "🏋️", "images": [], "tags": ["new"], "createdAt": "2026-10-30",
+    "description": "Rubber-coated hex dumbbells that will not roll away and protect your floor. Sold as a pair.",
+    "specs": [
+      { "key": "Weight", "value": "2 x 5 kg" },
+      { "key": "Coating", "value": "Rubber" },
+      { "key": "Grip", "value": "Knurled steel handle" }
+    ],
+    "variants": [{ "name": "Weight", "options": [{ "label": "2 x 5kg" }, { "label": "2 x 8kg", "priceDelta": 500, "mrpDelta": 900 }] }]
+  },
+  {
+    "id": "p41", "slug": "willowix-kashmir-willow-cricket-bat", "name": "Willowix Kashmir Willow Cricket Bat (Full Size)", "brand": "Willowix",
+    "categorySlug": "sports", "subcategory": "Cricket", "price": 1799, "mrp": 3499, "rating": 4.2, "reviewCount": 780,
+    "stock": 12, "emoji": "🏏", "images": [], "tags": [], "createdAt": "2026-06-18",
+    "description": "Well-balanced full-size Kashmir willow bat with a thick edge and comfortable grip for leather and tennis ball.",
+    "specs": [
+      { "key": "Willow", "value": "Kashmir willow" },
+      { "key": "Size", "value": "Full size (SH)" },
+      { "key": "Weight", "value": "1100 to 1200g" }
+    ]
+  },
+  {
+    "id": "p42", "slug": "pedalo-cycling-helmet-led", "name": "Pedalo Cycling Helmet with LED Tail Light", "brand": "Pedalo",
+    "categorySlug": "sports", "subcategory": "Cycling", "price": 699, "mrp": 1499, "rating": 4.3, "reviewCount": 970,
+    "stock": 22, "emoji": "🚴", "images": [], "tags": [], "createdAt": "2026-10-18",
+    "description": "Lightweight, well-ventilated helmet with an adjustable fit and a rechargeable LED light for night rides.",
+    "specs": [
+      { "key": "Fit", "value": "Adjustable, 54 to 62 cm" },
+      { "key": "Vents", "value": "18 air vents" },
+      { "key": "Light", "value": "USB rechargeable LED" }
+    ],
+    "variants": [{ "name": "Colour", "options": [{ "label": "Black" }, { "label": "Red" }] }]
+  }
 ]

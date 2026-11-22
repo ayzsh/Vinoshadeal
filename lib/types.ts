@@ -1,16 +1,27 @@
-/**
- * Data shapes for Vinoshadeal.
- * Round 2 (Supabase) tables will mirror these types, so keep them stable.
- */
+// Data shapes for Vinoshadeal.
+// Round 2 database tables will copy these. Only ADD optional fields; don't rename existing ones.
 
 export type ProductTag = "deal" | "trending" | "new" | "flash";
 
-export interface Category {
-  id: string;
-  slug: string;
+/** One row of the specs table, e.g. { key: "Battery", value: "5000mAh" } */
+export interface ProductSpec {
+  key: string;
+  value: string;
+}
+
+/** One choice inside a variant group, e.g. "256GB" (+ ₹2,500) */
+export interface VariantOption {
+  label: string;
+  /** Added to the product price when this option is picked */
+  priceDelta?: number;
+  /** Added to the MRP when this option is picked */
+  mrpDelta?: number;
+}
+
+/** A group of choices, e.g. "Colour" or "Storage" */
+export interface VariantGroup {
   name: string;
-  icon: string; // key used by components/CategoryIcon.tsx
-  subcategories: string[];
+  options: VariantOption[];
 }
 
 export interface Product {
@@ -19,14 +30,29 @@ export interface Product {
   name: string;
   brand: string;
   categorySlug: string;
-  price: number; // selling price in INR
-  mrp: number; // maximum retail price in INR
-  rating: number; // 0-5
+  price: number;
+  mrp: number;
+  rating: number;
   reviewCount: number;
   stock: number;
-  emoji: string; // placeholder picture until real images are added
-  images: string[]; // real image URLs (empty for now)
+  emoji: string;
+  images: string[];
   tags: ProductTag[];
+  // ---- added in Stage 2 (all optional) ----
+  subcategory?: string;
+  description?: string;
+  specs?: ProductSpec[];
+  variants?: VariantGroup[];
+  /** ISO date, e.g. "2026-11-10". Used for "Newest" sorting. */
+  createdAt?: string;
+}
+
+export interface Category {
+  id: string;
+  slug: string;
+  name: string;
+  icon: string;
+  subcategories: string[];
 }
 
 export interface CartItem {
@@ -44,16 +70,8 @@ export interface Address {
   city: string;
   state: string;
   pincode: string;
+  isDefault?: boolean;
 }
-
-export type OrderStatus =
-  | "placed"
-  | "confirmed"
-  | "shipped"
-  | "out_for_delivery"
-  | "delivered"
-  | "cancelled"
-  | "returned";
 
 export interface OrderItem {
   productId: string;
@@ -66,21 +84,18 @@ export interface Order {
   id: string;
   userId: string;
   items: OrderItem[];
-  subtotal: number;
-  discount: number;
-  deliveryFee: number;
   total: number;
-  paymentMethod: "upi" | "card" | "netbanking" | "wallet" | "cod";
-  status: OrderStatus;
+  status: "placed" | "packed" | "shipped" | "delivered" | "cancelled";
   address: Address;
-  createdAt: string; // ISO date
+  createdAt: string;
+  paymentId?: string;
 }
 
 export interface User {
   id: string;
   name: string;
-  email?: string;
+  email: string;
   phone?: string;
-  addresses: Address[];
-  wishlist: string[]; // product ids
+  addresses?: Address[];
+  wishlist?: string[];
 }
