@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import BottomNav from "@/components/layout/BottomNav";
 import WhatsAppButton from "@/components/layout/WhatsAppButton";
+import CompareBar from "@/components/layout/CompareBar";
 import { CartProvider } from "@/lib/cart-context";
 
 const poppins = Poppins({
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
           <BottomNav />
           <WhatsAppButton />
+          <CompareBar />
         </CartProvider>
       </body>
     </html>
