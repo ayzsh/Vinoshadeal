@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import BottomNav from "@/components/layout/BottomNav";
 import WhatsAppButton from "@/components/layout/WhatsAppButton";
+import { CartProvider } from "@/lib/cart-context";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -37,11 +38,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body>
-        <Header />
-        <main className="pb-16 md:pb-0">{children}</main>
-        <Footer />
-        <BottomNav />
-        <WhatsAppButton />
+        <CartProvider>
+          <Header />
+          <main className="pb-16 md:pb-0">{children}</main>
+          <Footer />
+          <BottomNav />
+          <WhatsAppButton />
+        </CartProvider>
       </body>
     </html>
   );

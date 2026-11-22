@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { Heart, Star } from "lucide-react";
 import type { Product } from "@/lib/types";
 import { discountPercent, formatINR } from "@/lib/utils";
+import { useCart } from "@/lib/cart-context";
 
 /**
  * variant="scroll" (default): fixed width, for horizontal rows on the home page
@@ -18,7 +18,8 @@ export default function ProductCard({
   product: Product;
   variant?: "scroll" | "grid" | "list";
 }) {
-  const [wished, setWished] = useState(false);
+  const { isWishlisted, toggleWishlist } = useCart();
+  const wished = isWishlisted(product.id);
   const off = discountPercent(product.price, product.mrp);
   const isList = variant === "list";
   const outOfStock = product.stock <= 0;
@@ -37,7 +38,7 @@ export default function ProductCard({
       )}
       <button
         type="button"
-        onClick={() => setWished((w) => !w)}
+        onClick={() => toggleWishlist(product.id)}
         aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
         aria-pressed={wished}
         className="absolute right-2 top-2 z-10 rounded-full bg-surface/90 p-1.5 shadow-soft transition hover:scale-110"

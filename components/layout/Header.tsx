@@ -8,13 +8,11 @@ import Logo from "@/components/Logo";
 import CategoryIcon from "@/components/CategoryIcon";
 import ThemeToggle from "./ThemeToggle";
 import { categories, products } from "@/lib/data";
-
-// Demo numbers. Round 2 will read the real cart and wishlist.
-const DEMO_CART_COUNT = 2;
-const DEMO_WISHLIST_COUNT = 3;
+import { useCart } from "@/lib/cart-context";
 
 export default function Header() {
   const router = useRouter();
+  const { cartCount, wishlist } = useCart();
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
   const [pincode, setPincode] = useState("");
@@ -182,20 +180,20 @@ export default function Header() {
           </Link>
           <Link
             href="/account/wishlist"
-            aria-label="Wishlist"
+            aria-label={wishlist.length > 0 ? `Wishlist, ${wishlist.length} items` : "Wishlist"}
             className="relative hidden rounded-full p-2 transition hover:bg-white/10 sm:block"
           >
             <Heart className="h-5 w-5" />
-            {DEMO_WISHLIST_COUNT > 0 && <Badge n={DEMO_WISHLIST_COUNT} />}
+            {wishlist.length > 0 && <Badge n={wishlist.length} />}
           </Link>
           <Link
             href="/cart"
-            aria-label="Cart"
+            aria-label={cartCount > 0 ? `Cart, ${cartCount} items` : "Cart"}
             className="relative flex items-center gap-1.5 rounded-field px-2.5 py-2 text-sm font-semibold transition hover:bg-white/10"
           >
             <ShoppingCart className="h-5 w-5" />
             <span className="hidden sm:inline">Cart</span>
-            {DEMO_CART_COUNT > 0 && <Badge n={DEMO_CART_COUNT} />}
+            {cartCount > 0 && <Badge n={cartCount} />}
           </Link>
         </nav>
       </div>
@@ -261,7 +259,10 @@ export default function Header() {
 
 function Badge({ n }: { n: number }) {
   return (
-    <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-red px-1 text-[11px] font-bold text-white">
+    <span
+      aria-hidden="true"
+      className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-red px-1 text-[11px] font-bold text-white"
+    >
       {n}
     </span>
   );
