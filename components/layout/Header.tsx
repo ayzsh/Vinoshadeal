@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, Heart, MapPin, Search, ShoppingCart, User } from "lucide-react";
 import Logo from "@/components/Logo";
@@ -10,8 +10,14 @@ import ThemeToggle from "./ThemeToggle";
 import { categories, products } from "@/lib/data";
 import { useCart } from "@/lib/cart-context";
 
+// Any page that saves a new pincode can run:
+//   window.dispatchEvent(new Event("vinoshadeal:pincode"))
+// and the header will update straight away.
+export const PINCODE_EVENT = "vinoshadeal:pincode";
+
 export default function Header() {
   const router = useRouter();
+  const pathname = usePathname();
   const { cartCount, wishlist } = useCart();
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
@@ -21,13 +27,33 @@ export default function Header() {
   const [pinError, setPinError] = useState("");
   const searchRef = useRef<HTMLDivElement>(null);
 
+  // Re-read the saved pincode: on first load, on every page change, when the
+  // window gets focus, when another tab changes it, and when a page announces a change.
+  useEffect(() => {
+    function readPincode() {
+      try {
+        setPincode(localStorage.getItem("pincode") ?? "");
+      } catch {
+        /* ignore */
+      }
+    }
+    window.addEventListener("storage", readPincode);
+    window.addEventListener("focus", readPincode);
+    window.addEventListener(PINCODE_EVENT, readPincode);
+    return () => {
+      window.removeEventListener("storage", readPincode);
+      window.removeEventListener("focus", readPincode);
+      window.removeEventListener(PINCODE_EVENT, readPincode);
+    };
+  }, []);
+
   useEffect(() => {
     try {
       setPincode(localStorage.getItem("pincode") ?? "");
     } catch {
       /* ignore */
     }
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     function onClick(e: MouseEvent) {
@@ -64,6 +90,7 @@ export default function Header() {
     setPinOpen(false);
     try {
       localStorage.setItem("pincode", pinDraft);
+      window.dispatchEvent(new Event(PINCODE_EVENT));
     } catch {
       /* ignore */
     }
