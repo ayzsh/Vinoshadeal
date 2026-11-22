@@ -1,0 +1,12 @@
+[
+  { "id": "c1", "slug": "mobiles", "name": "Mobiles", "icon": "smartphone", "subcategories": ["Smartphones", "Cases & Covers", "Power Banks", "Chargers & Cables"] },
+  { "id": "c2", "slug": "electronics", "name": "Electronics", "icon": "headphones", "subcategories": ["Headphones & Earbuds", "Smartwatches", "Televisions", "Speakers"] },
+  { "id": "c3", "slug": "fashion", "name": "Fashion", "icon": "shirt", "subcategories": ["Men", "Women", "Kids", "Footwear", "Bags"] },
+  { "id": "c4", "slug": "home-kitchen", "name": "Home & Kitchen", "icon": "cooking-pot", "subcategories": ["Cookware", "Storage", "Furnishing", "Decor"] },
+  { "id": "c5", "slug": "beauty", "name": "Beauty", "icon": "sparkles", "subcategories": ["Skincare", "Hair Care", "Makeup", "Fragrances"] },
+  { "id": "c6", "slug": "groceries", "name": "Groceries", "icon": "basket", "subcategories": ["Staples", "Snacks", "Beverages", "Dairy & Eggs"] },
+  { "id": "c7", "slug": "appliances", "name": "Appliances", "icon": "plug", "subcategories": ["Kitchen Appliances", "Fans & Coolers", "Irons", "Water Heaters"] },
+  { "id": "c8", "slug": "books", "name": "Books", "icon": "book", "subcategories": ["Fiction", "Exam Prep", "Business", "Children"] },
+  { "id": "c9", "slug": "toys", "name": "Toys", "icon": "gamepad", "subcategories": ["Building Blocks", "Board Games", "Soft Toys", "Remote Control"] },
+  { "id": "c10", "slug": "sports", "name": "Sports", "icon": "dumbbell", "subcategories": ["Fitness", "Yoga", "Cricket", "Cycling"] }
+]

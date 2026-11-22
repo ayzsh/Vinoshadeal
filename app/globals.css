@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light theme (default). Values are "R G B" so Tailwind can add opacity. */
+:root {
+  --bg: 250 250 252; /* #FAFAFC */
+  --surface: 255 255 255; /* white cards */
+  --fg: 26 26 46; /* #1A1A2E */
+  --muted: 107 107 128; /* #6B6B80 */
+  --tint: 244 239 250; /* #F4EFFA */
+  --border: 228 221 240;
+  --heading: 51 0 102; /* #330066 */
+  --redtext: 217 31 31; /* #D91F1F */
+}
+
+/* Dark theme */
+.dark {
+  --bg: 16 11 26;
+  --surface: 27 19 43;
+  --fg: 240 236 248;
+  --muted: 176 170 196;
+  --tint: 38 27 60;
+  --border: 58 45 84;
+  --heading: 222 208 250;
+  --redtext: 255 110 110;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-page font-sans text-ink antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading text-heading;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-red;
+    outline-style: solid;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-field bg-brand-red px-5 py-2.5 text-base font-bold text-white transition hover:bg-brand-red-dark active:scale-[0.98];
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-field border border-line bg-surface px-5 py-2.5 text-base font-semibold text-heading transition hover:border-brand-red hover:text-redtext;
+  }
+  .card {
+    @apply rounded-card border border-line bg-surface shadow-soft transition;
+  }
+  .card-hover {
+    @apply hover:-translate-y-0.5 hover:shadow-lift;
+  }
+  /* Skeleton loader: <div className="skeleton h-4 w-24" /> */
+  .skeleton {
+    @apply animate-pulse rounded-lg bg-tint;
+  }
+  .section-title {
+    @apply text-xl font-bold sm:text-2xl;
+  }
+}
+
+/* Hide scrollbar on horizontal scrollers */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
