@@ -1,9 +1,15 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+
 export type ToastTone = "default" | "error";
 
 /**
  * The small message bubble. Rendered once by CartProvider.
  * The wrapper (role="status") is always on the page so screen readers announce new messages.
  * bottom-20 keeps it above the mobile bottom nav.
+ * On /cart (phones) the sticky checkout bar is there too, so the message sits higher (bottom-36)
+ * and never covers the Proceed button.
  */
 export default function Toast({
   message,
@@ -12,11 +18,13 @@ export default function Toast({
   message: string | null;
   tone?: ToastTone;
 }) {
+  const pathname = usePathname();
+  const position = pathname === "/cart" ? "bottom-36" : "bottom-20";
   return (
     <div
       role="status"
       aria-live="polite"
-      className="pointer-events-none fixed inset-x-0 bottom-20 z-[70] flex justify-center px-4 md:bottom-6"
+      className={`pointer-events-none fixed inset-x-0 ${position} z-[70] flex justify-center px-4 md:bottom-6`}
     >
       {message && (
         <p

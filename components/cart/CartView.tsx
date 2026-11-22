@@ -5,7 +5,7 @@ import { useMemo, useRef, useState } from "react";
 import { Minus, Plus, Tag, X } from "lucide-react";
 import Breadcrumbs from "@/components/listing/Breadcrumbs";
 import { lineKey, useCart } from "@/lib/cart-context";
-import { products } from "@/lib/data";
+import { categories, products } from "@/lib/data";
 import { computeTotals, resolveCartLines, type CartTotals, type ResolvedLine } from "@/lib/cart-totals";
 import { FREE_DELIVERY_MIN, SAMPLE_COUPONS, evaluateCoupon } from "@/lib/coupons";
 import { discountPercent, formatINR } from "@/lib/utils";
@@ -59,7 +59,8 @@ export default function CartView() {
   }
 
   return (
-    <div className="container-page py-6 pb-24 md:pb-10">
+    // pb-44 on phones leaves room for the bottom nav (4rem) + the checkout bar (about 4rem).
+    <div className={`container-page py-6 md:pb-10 ${ready && itemCount > 0 ? "pb-44" : "pb-24"}`}>
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Cart" }]} />
 
       <h1
@@ -83,17 +84,34 @@ export default function CartView() {
             {/* ---------- lines in the cart ---------- */}
             <section aria-label="Items in your cart">
               {inCart.length === 0 ? (
-                // Simple version. Step D3 replaces this with the full empty state.
-                <div className="card p-6 text-center">
-                  <p className="font-heading text-lg font-semibold text-heading">Your cart is empty</p>
-                  <p className="mt-1 text-sm text-muted">
+                <div className="card px-6 py-10 text-center">
+                  <p aria-hidden="true" className="text-5xl">
+                    🛒
+                  </p>
+                  <p className="mt-3 font-heading text-xl font-bold text-heading">Your cart is empty</p>
+                  <p className="mx-auto mt-1 max-w-sm text-sm text-muted">
                     {saved.length > 0
-                      ? "Move something from Saved for later, or keep shopping."
+                      ? "Your saved items are below. Move one to your cart, or keep shopping."
                       : "Add something you like and it will show up here."}
                   </p>
-                  <Link href="/" className="btn-primary mt-4 inline-block">
+                  <Link href="/" className="btn-primary mt-5 inline-block">
                     Continue shopping
                   </Link>
+                  <nav aria-label="Shop by category" className="mt-6">
+                    <p className="text-sm font-semibold text-ink">Or browse a category</p>
+                    <ul className="mt-3 flex flex-wrap justify-center gap-2">
+                      {categories.slice(0, 6).map((c) => (
+                        <li key={c.id}>
+                          <Link
+                            href={`/category/${c.slug}`}
+                            className="inline-block rounded-full border border-line px-4 py-2 text-sm font-semibold text-ink transition hover:bg-tint hover:text-redtext"
+                          >
+                            {c.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </nav>
                 </div>
               ) : (
                 <ul className="space-y-4">
@@ -107,6 +125,11 @@ export default function CartView() {
                     />
                   ))}
                 </ul>
+              )}
+              {inCart.length > 0 && itemCount === 0 && (
+                <p role="status" className="mt-4 text-sm font-semibold text-redtext">
+                  None of these items can be bought right now. Remove them to continue shopping.
+                </p>
               )}
             </section>
 
@@ -152,6 +175,27 @@ export default function CartView() {
               <PriceCard totals={totals} />
             </aside>
           )}
+        </div>
+      )}
+
+      {/*
+        Mobile checkout bar. bottom-16 sits right on top of the bottom nav, z-30 like the product page bar.
+        pr-24 keeps the Proceed button clear of the round WhatsApp button (right-4, floats over this bar).
+        Phones only: from md up, the button is inside the Price details card.
+      */}
+      {ready && itemCount > 0 && (
+        <div className="fixed inset-x-0 bottom-16 z-30 border-t border-line bg-surface md:hidden">
+          <div className="flex items-center justify-between gap-3 py-2.5 pl-4 pr-24">
+            <div className="min-w-0">
+              <p className="text-xs text-muted">Total</p>
+              <p aria-live="polite" className="font-heading text-lg font-bold leading-tight text-ink">
+                {formatINR(totals.total)}
+              </p>
+            </div>
+            <Link href="/checkout" className="btn-primary whitespace-nowrap !px-4 !py-2.5 text-sm">
+              Proceed to checkout
+            </Link>
+          </div>
         </div>
       )}
     </div>
@@ -474,6 +518,13 @@ function PriceCard({ totals }: { totals: CartTotals }) {
           You will save {formatINR(t.totalSavings)} on this order
         </p>
       )}
+
+      {/* On phones the sticky bottom bar has this button instead. */}
+      <div className="mt-4 hidden md:block">
+        <Link href="/checkout" className="btn-primary block w-full text-center">
+          Proceed to checkout
+        </Link>
+      </div>
     </div>
   );
 }
