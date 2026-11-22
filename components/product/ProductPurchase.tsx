@@ -80,6 +80,8 @@ export default function ProductPurchase({ product }: { product: Product }) {
     setDelivery(sampleDelivery(pinInput));
     try {
       localStorage.setItem("pincode", pinInput);
+      // Tells the header to show the new pincode straight away.
+      window.dispatchEvent(new Event("vinoshadeal:pincode"));
     } catch {
       /* ignore */
     }

@@ -3,13 +3,14 @@
 // The /compare page content: side-by-side table for up to 3 products.
 // Reads the compare list from useCart() (saved in the browser for now).
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Check, Star, X } from "lucide-react";
 import Breadcrumbs from "@/components/listing/Breadcrumbs";
 import { categories, products } from "@/lib/data";
 import { useCart, MAX_COMPARE } from "@/lib/cart-context";
 import { discountPercent, formatINR } from "@/lib/utils";
+import { defaultSelection, priceFor } from "@/lib/pricing";
 import type { Product } from "@/lib/types";
 
 const LOW_STOCK = 6;
@@ -26,6 +27,18 @@ function specValue(p: Product, key: string): string | undefined {
 
 export default function CompareTable() {
   const { ready, compare, toggleCompare, clearCompare, addToCart, showToast } = useCart();
+
+  // Option choices per product, e.g. { p01: { Storage: "256GB" } }.
+  // Kept only while you are on this page. Products you have not touched use their first option.
+  const [choices, setChoices] = useState<Record<string, Record<string, string>>>({});
+
+  function selectionOf(p: Product): Record<string, string> {
+    return { ...defaultSelection(p), ...(choices[p.id] ?? {}) };
+  }
+
+  function choose(p: Product, group: string, label: string) {
+    setChoices((c) => ({ ...c, [p.id]: { ...selectionOf(p), [group]: label } }));
+  }
 
   const items = useMemo(
     () =>
@@ -46,10 +59,22 @@ export default function CompareTable() {
     return keys;
   }, [items]);
 
+  // One row per option group (Storage, Colour...) used by any of the products.
+  const optionGroups = useMemo(() => {
+    const names: string[] = [];
+    for (const p of items) {
+      for (const g of p.variants ?? []) {
+        if (!names.includes(g.name)) names.push(g.name);
+      }
+    }
+    return names;
+  }, [items]);
+
   // "Best" markers only make sense with 2+ products whose values actually differ.
+  // The price used is the one for the options currently chosen.
   const best = useMemo(() => {
     if (items.length < 2) return { price: null as number | null, rating: null as number | null };
-    const prices = items.map((p) => p.price);
+    const prices = items.map((p) => priceFor(p, { ...defaultSelection(p), ...(choices[p.id] ?? {}) }).price);
     const ratings = items.map((p) => p.rating);
     const minPrice = Math.min(...prices);
     const maxRating = Math.max(...ratings);
@@ -57,7 +82,7 @@ export default function CompareTable() {
       price: prices.some((v) => v !== minPrice) ? minPrice : null,
       rating: ratings.some((v) => v !== maxRating) ? maxRating : null,
     };
-  }, [items]);
+  }, [items, choices]);
 
   const anyVariants = items.some((p) => (p.variants?.length ?? 0) > 0);
 
@@ -188,23 +213,66 @@ export default function CompareTable() {
 
             <Row label="Price">
               {items.map((p) => {
-                const off = discountPercent(p.price, p.mrp);
+                const { price, mrp } = priceFor(p, selectionOf(p));
+                const off = discountPercent(price, mrp);
                 return (
                   <Cell key={p.id}>
-                    <span className="block text-base font-bold text-heading">
-                      {formatINR(p.price)}
-                    </span>
-                    {off > 0 && (
-                      <span className="block text-xs text-muted">
-                        <span className="line-through">{formatINR(p.mrp)}</span>{" "}
-                        <span className="font-semibold text-redtext">{off}% off</span>
+                    {/* aria-live: the price changes when you pick another option */}
+                    <div aria-live="polite">
+                      <span className="block text-base font-bold text-heading">
+                        {formatINR(price)}
                       </span>
-                    )}
-                    {best.price === p.price && <BestBadge>Lowest price</BestBadge>}
+                      {off > 0 && (
+                        <span className="block text-xs text-muted">
+                          <span className="line-through">{formatINR(mrp)}</span>{" "}
+                          <span className="font-semibold text-redtext">{off}% off</span>
+                        </span>
+                      )}
+                      {best.price === price && <BestBadge>Lowest price</BestBadge>}
+                    </div>
                   </Cell>
                 );
               })}
             </Row>
+
+            {optionGroups.map((name) => (
+              <Row key={`opt-${name}`} label={name}>
+                {items.map((p) => {
+                  const group = p.variants?.find((g) => g.name === name);
+                  if (!group) {
+                    return (
+                      <Cell key={p.id}>
+                        <span aria-hidden="true">-</span>
+                        <span className="sr-only">Not available</span>
+                      </Cell>
+                    );
+                  }
+                  const id = `opt-${p.id}-${name}`.replace(/\s+/g, "-");
+                  return (
+                    <Cell key={p.id}>
+                      <label htmlFor={id} className="sr-only">
+                        {name} for {p.name}
+                      </label>
+                      <select
+                        id={id}
+                        value={selectionOf(p)[name]}
+                        onChange={(e) => choose(p, name, e.target.value)}
+                        className="w-full rounded-field border border-line bg-page px-2 py-2 text-sm text-ink"
+                      >
+                        {group.options.map((o) => (
+                          <option key={o.label} value={o.label}>
+                            {o.label}
+                            {o.priceDelta
+                              ? ` (${o.priceDelta > 0 ? "+" : "-"}${formatINR(Math.abs(o.priceDelta))})`
+                              : ""}
+                          </option>
+                        ))}
+                      </select>
+                    </Cell>
+                  );
+                })}
+              </Row>
+            ))}
 
             <Row label="Rating">
               {items.map((p) => (
@@ -271,18 +339,17 @@ export default function CompareTable() {
                       >
                         Out of stock
                       </button>
-                    ) : (p.variants?.length ?? 0) > 0 ? (
-                      // Variants must be chosen on the product page, so we send them there.
-                      <Link
-                        href={`/product/${p.slug}`}
-                        className="btn-primary !px-3 !py-2 text-center text-sm"
-                      >
-                        Choose options
-                      </Link>
                     ) : (
                       <button
                         type="button"
-                        onClick={() => addToCart(p.id, 1)}
+                        // Adds the exact options picked in the table above.
+                        onClick={() =>
+                          addToCart(
+                            p.id,
+                            1,
+                            Object.keys(selectionOf(p)).length > 0 ? selectionOf(p) : undefined
+                          )
+                        }
                         className="btn-primary !px-3 !py-2 text-sm"
                       >
                         Add to Cart
@@ -304,8 +371,8 @@ export default function CompareTable() {
 
       {anyVariants && (
         <p className="mt-3 text-xs text-muted">
-          Prices shown are for the base option. Some products have storage or colour choices that
-          change the price.
+          Pick storage or colour in the table and the price updates. The specs listed are for the
+          standard model.
         </p>
       )}
     </div>
