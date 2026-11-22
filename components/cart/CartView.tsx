@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useRef } from "react";
-import { Minus, Plus } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { Minus, Plus, Tag, X } from "lucide-react";
 import Breadcrumbs from "@/components/listing/Breadcrumbs";
 import { lineKey, useCart } from "@/lib/cart-context";
 import { products } from "@/lib/data";
-import { resolveCartLines, type ResolvedLine } from "@/lib/cart-totals";
+import { computeTotals, resolveCartLines, type CartTotals, type ResolvedLine } from "@/lib/cart-totals";
+import { FREE_DELIVERY_MIN, SAMPLE_COUPONS, evaluateCoupon } from "@/lib/coupons";
 import { discountPercent, formatINR } from "@/lib/utils";
 
 const LOW_STOCK = 6;
@@ -18,9 +19,31 @@ export default function CartView() {
   const resolved = useMemo(() => resolveCartLines(items, products), [items]);
   const inCart = resolved.filter((r) => !r.line.savedForLater);
   const saved = resolved.filter((r) => r.line.savedForLater);
-  const buyable = inCart.filter((r) => !r.unavailable);
-  const itemCount = buyable.reduce((sum, r) => sum + r.quantity, 0);
-  const subtotal = buyable.reduce((sum, r) => sum + r.lineTotal, 0);
+
+  // The applied coupon code lives here (cart page state), not in cart-context.
+  const [appliedCode, setAppliedCode] = useState<string | null>(null);
+  const [couponInput, setCouponInput] = useState("");
+  const [couponError, setCouponError] = useState("");
+  const totals = useMemo(() => computeTotals(resolved, appliedCode), [resolved, appliedCode]);
+  const itemCount = totals.itemCount;
+
+  function applyCoupon(raw: string) {
+    const result = evaluateCoupon(raw, resolved);
+    if (!result.ok) {
+      setCouponError(result.reason);
+      return;
+    }
+    setAppliedCode(result.coupon.code);
+    setCouponInput("");
+    setCouponError("");
+    showToast(`Coupon ${result.coupon.code} applied`);
+  }
+
+  function removeCoupon() {
+    setAppliedCode(null);
+    setCouponError("");
+    showToast("Coupon removed");
+  }
 
   function remove(r: ResolvedLine) {
     removeFromCart(lineKey(r.line.productId, r.line.variant));
@@ -45,7 +68,7 @@ export default function CartView() {
         className="mt-3 font-heading text-2xl font-bold text-heading outline-none"
       >
         Your cart
-        {ready && buyable.length > 0 && (
+        {ready && itemCount > 0 && (
           <span aria-live="polite" className="ml-2 text-base font-normal text-muted">
             ({itemCount} {itemCount === 1 ? "item" : "items"})
           </span>
@@ -109,23 +132,24 @@ export default function CartView() {
           </div>
 
           {/* ---------- right column ---------- */}
-          {buyable.length > 0 && (
-            <aside aria-label="Order summary" className="lg:sticky lg:top-44">
-              {/* Step D1 shows only the item total. Step D2 replaces this card with the full price breakdown. */}
-              <div className="card p-5">
-                <h2 className="font-heading text-lg font-bold text-heading">Order summary</h2>
-                <div className="mt-3 flex items-center justify-between text-sm">
-                  <span className="text-muted">
-                    Items total ({itemCount} {itemCount === 1 ? "item" : "items"})
-                  </span>
-                  <span aria-live="polite" className="font-heading text-lg font-bold text-ink">
-                    {formatINR(subtotal)}
-                  </span>
-                </div>
-                <p className="mt-2 text-xs text-muted">
-                  Delivery, coupons and the final total come in the next step.
-                </p>
-              </div>
+          {itemCount > 0 && (
+            <aside
+              aria-label="Coupon and price details"
+              className="space-y-4 lg:sticky lg:top-44 lg:max-h-[calc(100vh-12rem)] lg:overflow-y-auto"
+            >
+              <CouponBox
+                appliedCode={appliedCode}
+                totals={totals}
+                input={couponInput}
+                error={couponError}
+                onInput={(v) => {
+                  setCouponInput(v);
+                  setCouponError("");
+                }}
+                onApply={applyCoupon}
+                onRemove={removeCoupon}
+              />
+              <PriceCard totals={totals} />
             </aside>
           )}
         </div>
@@ -385,6 +409,176 @@ function CartSkeleton() {
         <div className="skeleton h-44 rounded-card" />
       </div>
       <div className="skeleton hidden h-40 rounded-card lg:block" />
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+
+function PriceCard({ totals }: { totals: CartTotals }) {
+  const t = totals;
+  const progress = Math.min(100, Math.round((t.itemTotal / FREE_DELIVERY_MIN) * 100));
+  return (
+    <div className="card p-5">
+      <h2 className="font-heading text-lg font-bold text-heading">Price details</h2>
+      <dl className="mt-4 space-y-3 text-sm">
+        <Row
+          label={`Price (${t.itemCount} ${t.itemCount === 1 ? "item" : "items"}, at MRP)`}
+          value={formatINR(t.mrpTotal)}
+        />
+        {t.productDiscount > 0 && (
+          <Row label="Discount on MRP" value={`−${formatINR(t.productDiscount)}`} good />
+        )}
+        {t.couponDiscount > 0 && t.coupon?.ok && (
+          <Row label={`Coupon (${t.coupon.coupon.code})`} value={`−${formatINR(t.couponDiscount)}`} good />
+        )}
+        <Row
+          label="Delivery fee"
+          value={t.deliveryFee === 0 ? "Free" : formatINR(t.deliveryFee)}
+          good={t.deliveryFee === 0}
+        />
+      </dl>
+
+      <div aria-live="polite" className="mt-3">
+        {t.amountForFreeDelivery > 0 ? (
+          <>
+            <p className="text-sm text-ink">
+              Add <span className="font-semibold">{formatINR(t.amountForFreeDelivery)}</span> more for free
+              delivery
+            </p>
+            <div
+              role="progressbar"
+              aria-label="Progress towards free delivery"
+              aria-valuemin={0}
+              aria-valuemax={FREE_DELIVERY_MIN}
+              aria-valuenow={Math.min(t.itemTotal, FREE_DELIVERY_MIN)}
+              className="mt-1.5 h-2 overflow-hidden rounded-full bg-line"
+            >
+              <div className="h-full rounded-full bg-brand-red transition-all" style={{ width: `${progress}%` }} />
+            </div>
+          </>
+        ) : (
+          <p className="text-sm font-semibold text-success">You get free delivery on this order</p>
+        )}
+      </div>
+
+      <div className="mt-4 flex items-center justify-between border-t border-line pt-4">
+        <span className="font-heading font-bold text-heading">Total</span>
+        <span aria-live="polite" className="font-heading text-xl font-bold text-ink">
+          {formatINR(t.total)}
+        </span>
+      </div>
+
+      {t.totalSavings > 0 && (
+        <p aria-live="polite" className="mt-3 rounded-field bg-tint px-3 py-2 text-sm font-semibold text-success">
+          You will save {formatINR(t.totalSavings)} on this order
+        </p>
+      )}
+    </div>
+  );
+}
+
+function Row({ label, value, good = false }: { label: string; value: string; good?: boolean }) {
+  return (
+    <div className="flex items-baseline justify-between gap-3">
+      <dt className="text-muted">{label}</dt>
+      <dd className={`font-semibold ${good ? "text-success" : "text-ink"}`}>{value}</dd>
+    </div>
+  );
+}
+
+function CouponBox({
+  appliedCode,
+  totals,
+  input,
+  error,
+  onInput,
+  onApply,
+  onRemove,
+}: {
+  appliedCode: string | null;
+  totals: CartTotals;
+  input: string;
+  error: string;
+  onInput: (v: string) => void;
+  onApply: (code: string) => void;
+  onRemove: () => void;
+}) {
+  const result = totals.coupon;
+  return (
+    <div className="card p-5">
+      <h2 className="font-heading text-lg font-bold text-heading">Coupon</h2>
+
+      {appliedCode && (
+        <div className="mt-3">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-tint py-1 pl-3 pr-1 text-sm font-semibold text-ink">
+            <Tag className="h-4 w-4" aria-hidden="true" />
+            {appliedCode}
+            <button
+              type="button"
+              onClick={onRemove}
+              aria-label={`Remove coupon ${appliedCode}`}
+              className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-line"
+            >
+              <X className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </span>
+          {/* If the cart changes so the code no longer qualifies, we say so instead of pretending. */}
+          <p aria-live="polite" className="mt-2 text-sm">
+            {result?.ok ? (
+              <span className="font-semibold text-success">You saved {formatINR(result.discount)} with this code</span>
+            ) : (
+              <span className="font-semibold text-redtext">Not applied: {result && !result.ok ? result.reason : ""}</span>
+            )}
+          </p>
+        </div>
+      )}
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onApply(input);
+        }}
+        className="mt-3 flex gap-2"
+      >
+        <label htmlFor="coupon-code" className="sr-only">
+          Coupon code
+        </label>
+        <input
+          id="coupon-code"
+          value={input}
+          onChange={(e) => onInput(e.target.value)}
+          placeholder="Enter coupon code"
+          autoComplete="off"
+          autoCapitalize="characters"
+          aria-describedby="coupon-message"
+          className="min-w-0 flex-1 rounded-field border border-line bg-page px-3 py-2.5 text-sm uppercase text-ink placeholder:normal-case placeholder:text-muted"
+        />
+        <button type="submit" className="btn-outline !py-2.5 text-sm">
+          Apply
+        </button>
+      </form>
+      <p id="coupon-message" aria-live="polite" className="mt-2 text-sm font-semibold text-redtext">
+        {error}
+      </p>
+
+      <div className="mt-3 border-t border-line pt-3">
+        <p className="text-xs font-semibold text-muted">SAMPLE codes (for testing only, not real offers)</p>
+        <ul className="mt-2 space-y-2">
+          {SAMPLE_COUPONS.map((c) => (
+            <li key={c.code}>
+              <button
+                type="button"
+                onClick={() => onApply(c.code)}
+                className="w-full rounded-field border border-dashed border-line px-3 py-2 text-left transition hover:bg-tint"
+              >
+                <span className="font-semibold text-ink">{c.code}</span>
+                <span className="block text-xs text-muted">{c.description}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

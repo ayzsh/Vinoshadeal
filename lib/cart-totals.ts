@@ -5,6 +5,7 @@
 import type { Product } from "@/lib/types";
 import type { CartLine } from "@/lib/cart-context";
 import { priceFor } from "@/lib/pricing";
+import { DELIVERY_FEE, FREE_DELIVERY_MIN, evaluateCoupon, type CouponResult } from "@/lib/coupons";
 
 export interface ResolvedLine {
   /** the raw cart row */
@@ -54,4 +55,58 @@ export function resolveCartLines(lines: CartLine[], catalog: Product[]): Resolve
       lineTotal: price * quantity,
     };
   });
+}
+
+// ---------------------------------------------------------------------------
+// Price breakdown (Step D2). Checkout will reuse this same function.
+// ---------------------------------------------------------------------------
+
+export interface CartTotals {
+  /** number of units that are counted (in the cart, not saved, available) */
+  itemCount: number;
+  /** all counted items at MRP */
+  mrpTotal: number;
+  /** all counted items at selling price (the "item total"; the free-delivery rule uses this) */
+  itemTotal: number;
+  /** mrpTotal - itemTotal */
+  productDiscount: number;
+  /** result of the coupon check, or null if no code is applied */
+  coupon: CouponResult | null;
+  /** rupees taken off by the coupon (0 if none or not valid) */
+  couponDiscount: number;
+  deliveryFee: number;
+  /** how much more item total is needed for free delivery (0 when already free or cart is empty) */
+  amountForFreeDelivery: number;
+  /** what the shopper pays */
+  total: number;
+  /** productDiscount + couponDiscount */
+  totalSavings: number;
+}
+
+export function computeTotals(lines: ResolvedLine[], couponCode?: string | null): CartTotals {
+  const counted = lines.filter((l) => !l.line.savedForLater && !l.unavailable);
+  const itemCount = counted.reduce((s, l) => s + l.quantity, 0);
+  const mrpTotal = counted.reduce((s, l) => s + l.unitMrp * l.quantity, 0);
+  const itemTotal = counted.reduce((s, l) => s + l.lineTotal, 0);
+  const productDiscount = Math.max(0, mrpTotal - itemTotal);
+
+  const coupon = couponCode ? evaluateCoupon(couponCode, lines) : null;
+  const couponDiscount = coupon && coupon.ok ? coupon.discount : 0;
+
+  const hasItems = itemTotal > 0;
+  const deliveryFee = hasItems && itemTotal < FREE_DELIVERY_MIN ? DELIVERY_FEE : 0;
+  const amountForFreeDelivery = hasItems ? Math.max(0, FREE_DELIVERY_MIN - itemTotal) : 0;
+
+  return {
+    itemCount,
+    mrpTotal,
+    itemTotal,
+    productDiscount,
+    coupon,
+    couponDiscount,
+    deliveryFee,
+    amountForFreeDelivery,
+    total: Math.max(0, itemTotal - couponDiscount + deliveryFee),
+    totalSavings: productDiscount + couponDiscount,
+  };
 }
