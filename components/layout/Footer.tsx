@@ -28,7 +28,7 @@ export default function Footer() {
           </p>
         </div>
 
-        <FooterList title="Shop" links={categories.slice(0, 6).map((c) => ({ label: c.name, href: `/category/${c.slug}` }))} />
+        <FooterList title="Shop" links={categories.map((c) => ({ label: c.name, href: `/category/${c.slug}` }))} />
         <FooterList title="Help" links={help} />
         <FooterList title="Company" links={company} />
       </div>

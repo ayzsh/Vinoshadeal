@@ -225,7 +225,7 @@ export default function Header() {
                       {c.subcategories.map((s) => (
                         <li key={s}>
                           <Link
-                            href={`/category/${c.slug}`}
+                            href={`/category/${c.slug}?sub=${encodeURIComponent(s)}`}
                             className="text-sm text-muted hover:text-redtext"
                           >
                             {s}
