@@ -13,15 +13,23 @@ import { discountPercent, formatINR } from "@/lib/utils";
 const LOW_STOCK = 6;
 
 export default function CartView() {
-  const { ready, items, updateQuantity, removeFromCart, toggleSaveForLater, showToast } = useCart();
+  const {
+    ready,
+    items,
+    updateQuantity,
+    removeFromCart,
+    toggleSaveForLater,
+    showToast,
+    couponCode: appliedCode,
+    setCouponCode,
+  } = useCart();
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   const resolved = useMemo(() => resolveCartLines(items, products), [items]);
   const inCart = resolved.filter((r) => !r.line.savedForLater);
   const saved = resolved.filter((r) => r.line.savedForLater);
 
-  // The applied coupon code lives here (cart page state), not in cart-context.
-  const [appliedCode, setAppliedCode] = useState<string | null>(null);
+  // The applied coupon code is shared with checkout (it lives in cart-context).
   const [couponInput, setCouponInput] = useState("");
   const [couponError, setCouponError] = useState("");
   const totals = useMemo(() => computeTotals(resolved, appliedCode), [resolved, appliedCode]);
@@ -33,14 +41,14 @@ export default function CartView() {
       setCouponError(result.reason);
       return;
     }
-    setAppliedCode(result.coupon.code);
+    setCouponCode(result.coupon.code);
     setCouponInput("");
     setCouponError("");
     showToast(`Coupon ${result.coupon.code} applied`);
   }
 
   function removeCoupon() {
-    setAppliedCode(null);
+    setCouponCode(null);
     setCouponError("");
     showToast("Coupon removed");
   }

@@ -8,8 +8,8 @@ export type ToastTone = "default" | "error";
  * The small message bubble. Rendered once by CartProvider.
  * The wrapper (role="status") is always on the page so screen readers announce new messages.
  * bottom-20 keeps it above the mobile bottom nav.
- * On /cart (phones) the sticky checkout bar is there too, so the message sits higher (bottom-36)
- * and never covers the Proceed button.
+ * On /cart and /checkout (phones) the sticky bottom bar is there too, so the message sits higher (bottom-36)
+ * and never covers its button.
  */
 export default function Toast({
   message,
@@ -19,7 +19,7 @@ export default function Toast({
   tone?: ToastTone;
 }) {
   const pathname = usePathname();
-  const position = pathname === "/cart" ? "bottom-36" : "bottom-20";
+  const position = pathname === "/cart" || pathname === "/checkout" ? "bottom-36" : "bottom-20";
   return (
     <div
       role="status"

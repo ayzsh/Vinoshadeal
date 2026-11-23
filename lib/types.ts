@@ -65,12 +65,27 @@ export interface Address {
   id: string;
   fullName: string;
   phone: string;
+  /** house / flat number and street */
   line1: string;
+  /** area / locality (optional) */
   line2?: string;
   city: string;
   state: string;
   pincode: string;
   isDefault?: boolean;
+  // ---- added in Step E (optional) ----
+  addressType?: "home" | "work";
+}
+
+// ---- added in Step E (all optional / new) ----
+export type DeliveryOption = "standard" | "express";
+export type PaymentMethod = "upi" | "card" | "netbanking" | "wallet" | "cod";
+
+/** Who to contact about an order (guest checkout). */
+export interface OrderContact {
+  name: string;
+  phone: string;
+  email?: string;
 }
 
 export interface OrderItem {
@@ -78,6 +93,12 @@ export interface OrderItem {
   name: string;
   price: number;
   quantity: number;
+  // ---- added in Step E (optional) ----
+  slug?: string;
+  emoji?: string;
+  mrp?: number;
+  /** chosen options, e.g. { Storage: "256GB" } */
+  variant?: Record<string, string>;
 }
 
 export interface Order {
@@ -89,6 +110,17 @@ export interface Order {
   address: Address;
   createdAt: string;
   paymentId?: string;
+  // ---- added in Step E (optional) ----
+  /** true while the site runs in demo mode (lib/constants.ts) */
+  isDemo?: boolean;
+  deliveryOption?: DeliveryOption;
+  deliveryCharge?: number;
+  /** sample estimate text, e.g. "Fri, 27 Nov to Sun, 29 Nov" */
+  estimatedDelivery?: string;
+  couponCode?: string;
+  couponDiscount?: number;
+  contact?: OrderContact;
+  paymentMethod?: PaymentMethod;
 }
 
 export interface User {

@@ -34,9 +34,11 @@ interface StoredState {
   wishlist: string[];
   compare: string[];
   recent: string[];
+  /** coupon applied in the cart (also used by checkout), or null */
+  couponCode: string | null;
 }
 
-const EMPTY: StoredState = { cart: [], wishlist: [], compare: [], recent: [] };
+const EMPTY: StoredState = { cart: [], wishlist: [], compare: [], recent: [], couponCode: null };
 
 /** Unique id of a cart row: same product + same variant = same row. */
 export function lineKey(productId: string, variant?: VariantSelection): string {
@@ -77,6 +79,10 @@ function readStored(): StoredState {
       wishlist: idList(d?.wishlist),
       compare: idList(d?.compare).slice(0, MAX_COMPARE),
       recent: idList(d?.recent).slice(0, MAX_RECENT),
+      couponCode:
+        typeof d?.couponCode === "string" && d.couponCode.trim()
+          ? d.couponCode.trim().toUpperCase().slice(0, 40)
+          : null,
     };
   } catch {
     return EMPTY;
@@ -94,6 +100,11 @@ interface CartContextValue {
   updateQuantity: (key: string, quantity: number) => void;
   removeFromCart: (key: string) => void;
   toggleSaveForLater: (key: string) => void;
+  /** coupon code applied in the cart (shared with checkout), or null */
+  couponCode: string | null;
+  setCouponCode: (code: string | null) => void;
+  /** removes the lines in the cart, keeps "saved for later" items, clears the coupon */
+  clearCart: () => void;
   // wishlist
   wishlist: string[];
   isWishlisted: (productId: string) => boolean;
@@ -229,6 +240,21 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     [state.cart, showToast]
   );
 
+  const setCouponCode = useCallback((code: string | null) => {
+    setState((prev) => ({
+      ...prev,
+      couponCode: code && code.trim() ? code.trim().toUpperCase() : null,
+    }));
+  }, []);
+
+  const clearCart = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      cart: prev.cart.filter((l) => l.savedForLater),
+      couponCode: null,
+    }));
+  }, []);
+
   // ---------- wishlist ----------
   const toggleWishlist = useCallback(
     (productId: string) => {
@@ -282,6 +308,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       updateQuantity,
       removeFromCart,
       toggleSaveForLater,
+      couponCode: state.couponCode,
+      setCouponCode,
+      clearCart,
       wishlist: state.wishlist,
       isWishlisted: (id: string) => state.wishlist.includes(id),
       toggleWishlist,
@@ -300,6 +329,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       updateQuantity,
       removeFromCart,
       toggleSaveForLater,
+      setCouponCode,
+      clearCart,
       toggleWishlist,
       toggleCompare,
       clearCompare,
