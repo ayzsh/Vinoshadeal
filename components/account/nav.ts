@@ -46,7 +46,7 @@ export const ACCOUNT_SECTIONS: AccountSection[] = [
     title: "Saved addresses",
     description: "Manage your delivery addresses.",
     icon: MapPin,
-    available: false, // Step F3
+    available: true,
   },
   {
     href: "/account/returns",
