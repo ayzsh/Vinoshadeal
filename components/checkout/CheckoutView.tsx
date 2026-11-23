@@ -23,9 +23,11 @@ import {
   type FormErrors,
 } from "@/lib/checkout";
 import { DEMO_MODE, EXPRESS_DELIVERY_FEE, INDIAN_STATES } from "@/lib/constants";
+import { addressToForm, loadAddresses } from "@/lib/addresses";
 import { buildOrder, saveOrder } from "@/lib/orders";
 import { PAYMENT_METHODS } from "@/lib/payment";
-import type { DeliveryOption, PaymentMethod } from "@/lib/types";
+import { loadProfile } from "@/lib/profile";
+import type { Address, DeliveryOption, PaymentMethod } from "@/lib/types";
 import { formatINR } from "@/lib/utils";
 
 export default function CheckoutView() {
@@ -42,20 +44,46 @@ export default function CheckoutView() {
   /** a problem found when placing the order (out of stock, storage blocked...) */
   const [placeError, setPlaceError] = useState<{ text: string; toCart: boolean } | null>(null);
   const [placing, setPlacing] = useState(false);
+  /** addresses saved in "My account" on this device (Step F3b) */
+  const [savedAddresses, setSavedAddresses] = useState<Address[]>([]);
+  /** id of the saved address the form was filled from, "" = a different address */
+  const [chosenAddressId, setChosenAddressId] = useState("");
 
-  // Prefill once: the last address used on this device, otherwise the pincode picked in the header.
+  // Prefill once, in this order:
+  // 1. the DEFAULT saved address (name, mobile and address from it; email from "My profile",
+  //    otherwise from the last checkout),
+  // 2. otherwise the last address used at checkout on this device (used as it is),
+  // 3. otherwise the details in "My profile" plus the pincode picked in the header.
   useEffect(() => {
-    const saved = loadSavedForm();
-    if (saved) {
-      setForm(saved);
+    const addresses = loadAddresses();
+    setSavedAddresses(addresses);
+    const last = loadSavedForm();
+    const profile = loadProfile();
+
+    const def = addresses.find((a) => a.isDefault);
+    if (def) {
+      setForm({ ...addressToForm(def), email: profile?.email || last?.email || "" });
+      setChosenAddressId(def.id);
       return;
     }
+    if (last) {
+      setForm(last);
+      return;
+    }
+    let pin = "";
     try {
-      const pin = localStorage.getItem("pincode");
-      if (pin && /^\d{6}$/.test(pin)) setForm((f) => ({ ...f, pincode: pin }));
+      const p = localStorage.getItem("pincode");
+      if (p && /^\d{6}$/.test(p)) pin = p;
     } catch {
       /* ignore */
     }
+    setForm((f) => ({
+      ...f,
+      fullName: profile?.name ?? f.fullName,
+      phone: profile?.phone ?? f.phone,
+      email: profile?.email ?? f.email,
+      pincode: pin || f.pincode,
+    }));
   }, []);
 
   useEffect(() => {
@@ -82,8 +110,22 @@ export default function CheckoutView() {
   function change<K extends keyof CheckoutForm>(name: K, value: CheckoutForm[K]) {
     const next = { ...form, [name]: value };
     setForm(next);
+    if (name !== "email" && chosenAddressId) setChosenAddressId("");
     // Once a field shows an error, re-check it while typing so the message goes away as soon as it is fixed.
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: validateField(next, name) }));
+  }
+
+  /** "Use a saved address": fills the form from it (the email stays as it is). */
+  function chooseSavedAddress(id: string) {
+    setChosenAddressId(id);
+    setErrors({});
+    setErrorNote("");
+    const a = savedAddresses.find((x) => x.id === id);
+    setForm((f) =>
+      a
+        ? { ...addressToForm(a), email: f.email }
+        : { ...EMPTY_FORM, email: f.email } // "enter a different address": start with empty address fields
+    );
   }
 
   function blur(name: keyof CheckoutForm) {
@@ -270,6 +312,33 @@ export default function CheckoutView() {
                 <SectionTitle id="sec-address" n={1}>
                   Contact and address
                 </SectionTitle>
+                {savedAddresses.length > 0 && (
+                  <div className="mt-4">
+                    <label htmlFor="co-saved-address" className="text-sm font-semibold text-ink">
+                      Use a saved address
+                    </label>
+                    <select
+                      id="co-saved-address"
+                      value={chosenAddressId}
+                      onChange={(e) => chooseSavedAddress(e.target.value)}
+                      className="mt-1 w-full min-w-0 rounded-field border border-line bg-page px-3 py-2.5 text-sm text-ink"
+                    >
+                      {savedAddresses.map((a) => (
+                        <option key={a.id} value={a.id}>
+                          {a.fullName}, {a.line1}, {a.city} {a.pincode}
+                          {a.isDefault ? " (default)" : ""}
+                        </option>
+                      ))}
+                      <option value="">Enter a different address</option>
+                    </select>
+                    <p className="pt-1 text-xs text-muted">
+                      Saved on this device.{" "}
+                      <Link href="/account/addresses" className="font-semibold text-redtext underline">
+                        Manage saved addresses
+                      </Link>
+                    </p>
+                  </div>
+                )}
                 <div className="mt-4 grid gap-x-4 sm:grid-cols-2">
                   <TextField
                     name="fullName"
