@@ -126,6 +126,39 @@ export interface Order {
   deliveredAt?: string;
 }
 
+// ---- added in Step F4 (returns) ----
+export type ReturnReason =
+  | "damaged"
+  | "wrong_item"
+  | "not_as_described"
+  | "size_fit"
+  | "no_longer_needed"
+  | "other";
+
+/** One order line inside a return request (a snapshot, so it still reads well if the product changes). */
+export interface ReturnItem {
+  /** position of the line in Order.items */
+  orderItemIndex: number;
+  productId: string;
+  name: string;
+  quantity: number;
+  emoji?: string;
+  variant?: Record<string, string>;
+}
+
+export interface ReturnRequest {
+  id: string;
+  orderId: string;
+  items: ReturnItem[];
+  reason: ReturnReason;
+  note?: string;
+  /** "received" = the request was saved. Real statuses (approved, refunded...) come with Round 2. */
+  status: "received";
+  createdAt: string;
+  /** true while the site runs in demo mode: no pickup and no refund */
+  isDemo?: boolean;
+}
+
 export interface User {
   id: string;
   name: string;

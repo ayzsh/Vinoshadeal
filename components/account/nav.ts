@@ -54,7 +54,7 @@ export const ACCOUNT_SECTIONS: AccountSection[] = [
     title: "Returns",
     description: "Request a return for a delivered order.",
     icon: RotateCcw,
-    available: false, // Step F4
+    available: true,
   },
   {
     href: "/account/profile",
