@@ -2,17 +2,20 @@ import { Info } from "lucide-react";
 import Breadcrumbs from "@/components/listing/Breadcrumbs";
 import { CONTENT_IS_DRAFT } from "@/lib/site";
 
-/** Frame for the static pages: breadcrumbs, title, intro, the draft note, then the page content. */
+/** Frame for the static pages: breadcrumbs, title, intro, the draft note(s), then the page content. */
 export default function PageShell({
   title,
   crumb,
   intro,
+  legal = false,
   children,
 }: {
   title: string;
   /** short name for the breadcrumb */
   crumb?: string;
   intro?: string;
+  /** true for Privacy, Terms and the other policy pages: adds the "not legal advice" note while in draft */
+  legal?: boolean;
   children: React.ReactNode;
 }) {
   return (
@@ -28,7 +31,12 @@ export default function PageShell({
             className="mt-4 flex items-start gap-2 rounded-field border border-line bg-tint px-4 py-3 text-sm font-semibold text-ink"
           >
             <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-            <p>Draft: this page is being reviewed and may change before launch.</p>
+            <p>
+              Draft: this page is being reviewed and may change before launch.
+              {legal
+                ? " It is a working draft, not legal advice, and a lawyer must review it before it is used."
+                : ""}
+            </p>
           </div>
         )}
 

@@ -52,7 +52,11 @@ const GROUPS: FaqGroup[] = [
             Standard delivery is free when your items add up to {formatINR(FREE_DELIVERY_MIN)} or more (counted
             before any coupon is taken off). Below that, the delivery charge is {formatINR(DELIVERY_FEE)}.
             Express delivery adds {formatINR(EXPRESS_DELIVERY_FEE)} on top of the standard charge. You always see
-            the delivery charge before you place your order.
+            the delivery charge before you place your order. See{" "}
+            <Link href="/shipping" className={link}>
+              Shipping
+            </Link>{" "}
+            for the details.
           </>
         ),
       },
@@ -129,7 +133,11 @@ const GROUPS: FaqGroup[] = [
         a: (
           <>
             You can ask for a return within {RETURN_WINDOW_DAYS} days of delivery. The period counts from the day
-            your order was delivered.
+            your order was delivered. The full rules are on the{" "}
+            <Link href="/returns" className={link}>
+              Returns &amp; Refunds
+            </Link>{" "}
+            page.
           </>
         ),
       },

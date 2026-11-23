@@ -1,12 +1,15 @@
 import { MessageCircle } from "lucide-react";
+import { SITE_CONTACT } from "@/lib/site";
 
-// TODO: replace with your real WhatsApp number (country code, no + or spaces).
-const WHATSAPP_NUMBER = "910000000000";
-
+// The number comes from lib/site.ts (SITE_CONTACT.whatsapp: digits with country code, no + or spaces).
+// While it is empty the button is not shown at all, so nobody is sent to a number that is not ours.
 export default function WhatsAppButton() {
+  const number = SITE_CONTACT.whatsapp.replace(/\D/g, "");
+  if (!number) return null;
+
   return (
     <a
-      href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hi Vinoshadeal, I need help with...")}`}
+      href={`https://wa.me/${number}?text=${encodeURIComponent("Hi Vinoshadeal, I need help with...")}`}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with us on WhatsApp"
