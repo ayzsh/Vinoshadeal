@@ -121,6 +121,9 @@ export interface Order {
   couponDiscount?: number;
   contact?: OrderContact;
   paymentMethod?: PaymentMethod;
+  // ---- added in Step F2 (optional) ----
+  /** ISO date when the order was delivered. In demo mode it is set by "Mark as delivered (demo)". Returns (F4) count 7 days from this. */
+  deliveredAt?: string;
 }
 
 export interface User {

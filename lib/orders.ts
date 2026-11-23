@@ -96,6 +96,53 @@ export function getOrderById(id: string): Order | null {
   return loadOrders().find((o) => o.id === id) ?? null;
 }
 
+function writeOrders(list: Order[]): boolean {
+  try {
+    localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(list));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Changes an existing order in place (keeps its position in the list).
+ * Returns the updated order, or null if the order was not found or the browser could not store it.
+ * Round 2: becomes a server call.
+ */
+export function updateOrder(
+  id: string,
+  changes: Partial<Pick<Order, "status" | "deliveredAt">>
+): Order | null {
+  const list = loadOrders();
+  const index = list.findIndex((o) => o.id === id);
+  if (index === -1) return null;
+  const updated: Order = { ...list[index], ...changes };
+  const next = list.slice();
+  next[index] = updated;
+  if (!writeOrders(next)) return null;
+  // read it back, so we only say "done" when it really is
+  return getOrderById(id)?.status === updated.status ? updated : null;
+}
+
+/** Cancels an order. Only allowed while its status is "placed". Returns the updated order or null. */
+export function cancelOrder(id: string): Order | null {
+  const order = getOrderById(id);
+  if (!order || order.status !== "placed") return null;
+  return updateOrder(id, { status: "cancelled" });
+}
+
+/**
+ * DEMO ONLY: marks an order as delivered so returns can be tested. Refuses when DEMO_MODE is off.
+ * Returns the updated order or null.
+ */
+export function markDeliveredDemo(id: string): Order | null {
+  if (!DEMO_MODE) return null;
+  const order = getOrderById(id);
+  if (!order || order.status === "cancelled" || order.status === "delivered") return null;
+  return updateOrder(id, { status: "delivered", deliveredAt: new Date().toISOString() });
+}
+
 /** Saves a new order. Returns false if the browser could not store it (nothing was saved). */
 export function saveOrder(order: Order): boolean {
   try {

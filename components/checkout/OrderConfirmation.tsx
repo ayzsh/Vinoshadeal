@@ -115,6 +115,9 @@ function Details({
               <dd className="font-semibold text-ink">{placedOn}</dd>
             </div>
           </dl>
+          <Link href={`/account/orders/${encodeURIComponent(order.id)}`} className="btn-outline mt-4 inline-block">
+            View order
+          </Link>
         </section>
 
         {/* items */}

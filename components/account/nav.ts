@@ -30,7 +30,7 @@ export const ACCOUNT_SECTIONS: AccountSection[] = [
     title: "My orders",
     description: "See your orders and their status.",
     icon: Package,
-    available: false, // Step F2
+    available: true,
   },
   {
     href: "/account/wishlist",
