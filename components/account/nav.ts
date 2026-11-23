@@ -38,7 +38,7 @@ export const ACCOUNT_SECTIONS: AccountSection[] = [
     title: "My wishlist",
     description: "Products you have saved with the heart.",
     icon: Heart,
-    available: false, // Step F3
+    available: true,
   },
   {
     href: "/account/addresses",
