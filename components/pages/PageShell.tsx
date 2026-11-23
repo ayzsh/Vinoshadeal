@@ -1,0 +1,39 @@
+import { Info } from "lucide-react";
+import Breadcrumbs from "@/components/listing/Breadcrumbs";
+import { CONTENT_IS_DRAFT } from "@/lib/site";
+
+/** Frame for the static pages: breadcrumbs, title, intro, the draft note, then the page content. */
+export default function PageShell({
+  title,
+  crumb,
+  intro,
+  children,
+}: {
+  title: string;
+  /** short name for the breadcrumb */
+  crumb?: string;
+  intro?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="container-page py-6 pb-10">
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: crumb ?? title }]} />
+      <div className="max-w-3xl">
+        <h1 className="mt-3 font-heading text-2xl font-bold text-heading sm:text-3xl">{title}</h1>
+        {intro && <p className="mt-2 text-base text-muted">{intro}</p>}
+
+        {CONTENT_IS_DRAFT && (
+          <div
+            role="note"
+            className="mt-4 flex items-start gap-2 rounded-field border border-line bg-tint px-4 py-3 text-sm font-semibold text-ink"
+          >
+            <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+            <p>Draft: this page is being reviewed and may change before launch.</p>
+          </div>
+        )}
+
+        <div className="mt-6 space-y-8">{children}</div>
+      </div>
+    </div>
+  );
+}
