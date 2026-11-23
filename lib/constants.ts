@@ -17,6 +17,9 @@ export const EXPRESS_DELIVERY_FEE = 60;
 /** localStorage keys */
 export const ADDRESS_STORAGE_KEY = "vinoshadeal-address-v1";
 export const ORDERS_STORAGE_KEY = "vinoshadeal-orders-v1";
+export const PROFILE_STORAGE_KEY = "vinoshadeal-profile-v1";
+export const ADDRESSES_STORAGE_KEY = "vinoshadeal-addresses-v1";
+export const RETURNS_STORAGE_KEY = "vinoshadeal-returns-v1";
 
 /** Indian states and union territories for the address form. */
 export const INDIAN_STATES: string[] = [

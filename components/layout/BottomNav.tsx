@@ -22,7 +22,13 @@ export default function BottomNav() {
     >
       <ul className="grid grid-cols-5">
         {items.map(({ href, label, icon: Icon }) => {
-          const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+          // /account/wishlist belongs to "Wishlist", so "Account" must not light up there too.
+          const active =
+            href === "/"
+              ? pathname === "/"
+              : href === "/account"
+                ? pathname.startsWith("/account") && !pathname.startsWith("/account/wishlist")
+                : pathname.startsWith(href);
           return (
             <li key={href}>
               <Link
