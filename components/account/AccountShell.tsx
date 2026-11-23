@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { Info } from "lucide-react";
 import Breadcrumbs from "@/components/listing/Breadcrumbs";
 import { DEMO_MODE } from "@/lib/constants";
@@ -13,6 +14,13 @@ import { ACCOUNT_SECTIONS, isActiveSection } from "@/components/account/nav";
  */
 export default function AccountShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const menuRef = useRef<HTMLUListElement>(null);
+
+  // On phones the menu scrolls sideways: bring the current section into view.
+  useEffect(() => {
+    const active = menuRef.current?.querySelector<HTMLElement>('[aria-current="page"]');
+    active?.scrollIntoView({ inline: "center", block: "nearest" });
+  }, [pathname]);
   const current = ACCOUNT_SECTIONS.find((s) => isActiveSection(s.href, pathname) && s.href !== "/account");
   const overview = ACCOUNT_SECTIONS[0];
 
@@ -40,15 +48,18 @@ export default function AccountShell({ children }: { children: React.ReactNode }
         </div>
       )}
 
-      <div className="mt-5 grid gap-6 md:grid-cols-[14rem_1fr] md:items-start">
-        <nav aria-label="Account sections">
-          <ul className="no-scrollbar flex gap-2 overflow-x-auto pb-1 md:flex-col md:overflow-visible md:pb-0">
+      <div className="mt-5 grid grid-cols-1 gap-6 md:grid-cols-[14rem_minmax(0,1fr)] md:items-start">
+        <nav aria-label="Account sections" className="min-w-0">
+          <ul
+            ref={menuRef}
+            className="no-scrollbar flex snap-x gap-2 overflow-x-auto pb-1 md:flex-col md:overflow-visible md:pb-0"
+          >
             {ACCOUNT_SECTIONS.map((s) => {
               const Icon = s.icon;
               const active = isActiveSection(s.href, pathname);
               const base = "flex items-center gap-2 whitespace-nowrap rounded-field px-4 py-2.5 text-sm font-semibold";
               return (
-                <li key={s.href} className="shrink-0 md:shrink">
+                <li key={s.href} className="shrink-0 snap-start md:shrink">
                   {s.available ? (
                     <Link
                       href={s.href}

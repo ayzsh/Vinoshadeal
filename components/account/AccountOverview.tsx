@@ -31,7 +31,7 @@ export default function AccountOverview() {
 
   return (
     <div className="space-y-6">
-      <section className="card p-5" aria-labelledby="ov-hello">
+      <section className="card p-4 sm:p-5" aria-labelledby="ov-hello">
         <h2 id="ov-hello" className="font-heading text-lg font-bold text-heading">
           {first ? `Hello, ${first}` : "Welcome"}
         </h2>
@@ -43,12 +43,12 @@ export default function AccountOverview() {
       </section>
 
       <section aria-label="Account sections">
-        <ul className="grid gap-4 sm:grid-cols-2">
+        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
           {ACCOUNT_SECTIONS.filter((s) => s.href !== "/account").map((s) => {
             const Icon = s.icon;
             const body = (
               <>
-                <span className="flex items-center gap-2 font-heading font-bold text-heading">
+                <span className="flex flex-wrap items-center gap-x-2 font-heading font-bold text-heading">
                   <Icon className="h-5 w-5" aria-hidden="true" />
                   {s.label}
                   {!s.available && <span className="text-xs font-normal text-muted">(soon)</span>}
@@ -57,13 +57,13 @@ export default function AccountOverview() {
               </>
             );
             return (
-              <li key={s.href}>
+              <li key={s.href} className="min-w-0">
                 {s.available ? (
-                  <Link href={s.href} className="card card-hover block h-full p-5">
+                  <Link href={s.href} className="card card-hover block h-full p-4 sm:p-5">
                     {body}
                   </Link>
                 ) : (
-                  <div aria-disabled="true" className="card block h-full border-dashed p-5 opacity-80">
+                  <div aria-disabled="true" className="card block h-full border-dashed p-4 opacity-80 sm:p-5">
                     {body}
                   </div>
                 )}
@@ -73,7 +73,7 @@ export default function AccountOverview() {
         </ul>
       </section>
 
-      <section className="card p-5" aria-labelledby="ov-signin">
+      <section className="card p-4 sm:p-5" aria-labelledby="ov-signin">
         <h2 id="ov-signin" className="font-heading text-lg font-bold text-heading">
           Sign in or create an account
         </h2>

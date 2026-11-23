@@ -119,7 +119,7 @@ export default function OrderDetails({ id }: { id: string }) {
       </Link>
 
       {/* header */}
-      <section className="card p-5" aria-labelledby="od-title">
+      <section className="card p-4 sm:p-5" aria-labelledby="od-title">
         <div className="flex flex-wrap items-center gap-2">
           <OrderStatusBadge status={o.status} />
           {o.isDemo && (
@@ -145,7 +145,7 @@ export default function OrderDetails({ id }: { id: string }) {
       </section>
 
       {/* tracking */}
-      <section className="card p-5" aria-labelledby="od-track">
+      <section className="card p-4 sm:p-5" aria-labelledby="od-track">
         <h2 id="od-track" className="font-heading text-lg font-bold text-heading">
           Order status
         </h2>
@@ -237,7 +237,7 @@ export default function OrderDetails({ id }: { id: string }) {
       </section>
 
       {/* items */}
-      <section className="card p-5" aria-labelledby="od-items">
+      <section className="card p-4 sm:p-5" aria-labelledby="od-items">
         <h2 id="od-items" className="font-heading text-lg font-bold text-heading">
           Items ({itemCount})
         </h2>
@@ -279,7 +279,7 @@ export default function OrderDetails({ id }: { id: string }) {
       </section>
 
       {/* delivery and payment */}
-      <section className="card p-5" aria-labelledby="od-ship">
+      <section className="card p-4 sm:p-5" aria-labelledby="od-ship">
         <h2 id="od-ship" className="font-heading text-lg font-bold text-heading">
           Delivery and payment
         </h2>
@@ -330,7 +330,7 @@ export default function OrderDetails({ id }: { id: string }) {
       </section>
 
       {/* totals */}
-      <section className="card p-5" aria-labelledby="od-total">
+      <section className="card p-4 sm:p-5" aria-labelledby="od-total">
         <h2 id="od-total" className="font-heading text-lg font-bold text-heading">
           Order total
         </h2>
