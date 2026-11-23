@@ -159,6 +159,32 @@ export interface ReturnRequest {
   isDemo?: boolean;
 }
 
+// ---- added in Step G1 (Sell on Vinoshadeal) ----
+export type SellerType = "individual" | "business";
+
+/** A seller application. Round 2: a database table; an admin reviews it and sets a status. */
+export interface SellerApplication {
+  /** shop or brand name */
+  businessName: string;
+  contactName: string;
+  phone: string;
+  email: string;
+  city: string;
+  state: string;
+  sellerType: SellerType;
+  /** category slugs (see Category.slug) */
+  categorySlugs: string[];
+  /** a range as text, e.g. "11 to 50" */
+  productCount: string;
+  /** GST number, optional */
+  gstin?: string;
+  about?: string;
+  createdAt: string;
+  updatedAt: string;
+  /** true while the site runs in demo mode: saved on this device only, sent to nobody */
+  isDemo?: boolean;
+}
+
 export interface User {
   id: string;
   name: string;

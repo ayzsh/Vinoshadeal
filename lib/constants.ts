@@ -20,6 +20,7 @@ export const ORDERS_STORAGE_KEY = "vinoshadeal-orders-v1";
 export const PROFILE_STORAGE_KEY = "vinoshadeal-profile-v1";
 export const ADDRESSES_STORAGE_KEY = "vinoshadeal-addresses-v1";
 export const RETURNS_STORAGE_KEY = "vinoshadeal-returns-v1";
+export const SELLER_STORAGE_KEY = "vinoshadeal-seller-application-v1";
 
 /** Indian states and union territories for the address form. */
 export const INDIAN_STATES: string[] = [
