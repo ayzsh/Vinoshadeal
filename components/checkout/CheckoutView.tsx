@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import Breadcrumbs from "@/components/listing/Breadcrumbs";
@@ -22,17 +23,25 @@ import {
   type FormErrors,
 } from "@/lib/checkout";
 import { DEMO_MODE, EXPRESS_DELIVERY_FEE, INDIAN_STATES } from "@/lib/constants";
-import type { DeliveryOption } from "@/lib/types";
+import { buildOrder, saveOrder } from "@/lib/orders";
+import { PAYMENT_METHODS } from "@/lib/payment";
+import type { DeliveryOption, PaymentMethod } from "@/lib/types";
 import { formatINR } from "@/lib/utils";
 
 export default function CheckoutView() {
-  const { ready, items, couponCode, showToast } = useCart();
+  const router = useRouter();
+  const { ready, items, couponCode, clearCart } = useCart();
 
   const [form, setForm] = useState<CheckoutForm>(EMPTY_FORM);
   const [errors, setErrors] = useState<FormErrors>({});
   const [errorNote, setErrorNote] = useState("");
   const [delivery, setDelivery] = useState<DeliveryOption>("standard");
   const [summaryOpen, setSummaryOpen] = useState(false);
+  const [payment, setPayment] = useState<PaymentMethod | null>(null);
+  const [paymentError, setPaymentError] = useState("");
+  /** a problem found when placing the order (out of stock, storage blocked...) */
+  const [placeError, setPlaceError] = useState<{ text: string; toCart: boolean } | null>(null);
+  const [placing, setPlacing] = useState(false);
 
   // Prefill once: the last address used on this device, otherwise the pincode picked in the header.
   useEffect(() => {
@@ -48,6 +57,10 @@ export default function CheckoutView() {
       /* ignore */
     }
   }, []);
+
+  useEffect(() => {
+    if (placeError) document.getElementById("co-place-error")?.focus();
+  }, [placeError]);
 
   const resolved = useMemo(() => resolveCartLines(items, products), [items]);
   const totals = useMemo(
@@ -80,22 +93,70 @@ export default function CheckoutView() {
 
   function placeOrder(e: React.FormEvent) {
     e.preventDefault();
+    if (placing) return;
+    setPlaceError(null);
+
+    // 1. the form and the payment choice
     const found = validateForm(form);
     setErrors(found);
-    const first = FIELD_ORDER.find((k) => found[k]);
-    if (first) {
-      const n = Object.keys(found).length;
-      setErrorNote(`Please fix ${n} ${n === 1 ? "field" : "fields"} to continue.`);
-      document.getElementById(`co-${first}`)?.focus();
+    const missingPayment = payment === null;
+    setPaymentError(missingPayment ? "Choose a payment method." : "");
+    const problems = Object.keys(found).length + (missingPayment ? 1 : 0);
+    if (problems > 0) {
+      setErrorNote(`Please fix ${problems} ${problems === 1 ? "thing" : "things"} to continue.`);
+      const first = FIELD_ORDER.find((k) => found[k]);
+      if (first) document.getElementById(`co-${first}`)?.focus();
+      else document.getElementById("co-payment-first")?.focus();
       return;
     }
     setErrorNote("");
+
+    // 2. check stock and availability again, from the catalog, right now
+    const fresh = resolveCartLines(items, products);
+    const inCart = fresh.filter((r) => !r.line.savedForLater);
+    const bad = inCart.filter((r) => r.unavailable || r.quantityReduced);
+    if (bad.length > 0) {
+      const names = bad.map((r) => {
+        if (!r.product) return "an item that is no longer sold";
+        return r.unavailable
+          ? `${r.product.name} is out of stock`
+          : `only ${r.product.stock} of ${r.product.name} ${r.product.stock === 1 ? "is" : "are"} left`;
+      });
+      setPlaceError({
+        text: `We can't place this order yet: ${names.join("; ")}. Please update your cart.`,
+        toCart: true,
+      });
+      return;
+    }
+    if (inCart.length === 0 || payment === null) {
+      setPlaceError({ text: "Your cart is empty, so there is nothing to order.", toCart: true });
+      return;
+    }
+
+    // 3. build and save the order (demo mode: in this browser only)
+    const finalTotals = computeCheckoutTotals(fresh, couponCode, delivery);
+    const order = buildOrder({
+      lines: fresh,
+      totals: finalTotals,
+      form,
+      paymentMethod: payment,
+      estimatedDelivery: estimates[delivery],
+    });
+    if (!saveOrder(order)) {
+      // Never pretend: the order was NOT saved, so the cart is kept as it is.
+      setPlaceError({
+        text: "We couldn't save your order because your browser blocked or filled its storage. Nothing was placed and your cart is unchanged.",
+        toCart: false,
+      });
+      return;
+    }
     saveForm(form);
-    // STEP E1: "Place order" does not create an order yet. Step E2 adds the payment choice and the order itself.
-    showToast("Details saved on this device. Placing the order comes in the next update.");
+    setPlacing(true); // shows "Placing your order" so the empty-cart screen never flashes
+    clearCart(); // removes the cart lines, keeps "saved for later" items, clears the coupon
+    router.push(`/order-confirmation/${order.id}`);
   }
 
-  const showBar = ready && totals.itemCount > 0;
+  const showBar = ready && !placing && totals.itemCount > 0;
 
   return (
     // pb-44 on phones leaves room for the bottom nav (4rem) + the sticky bar (about 4rem).
@@ -108,6 +169,11 @@ export default function CheckoutView() {
 
       {!ready ? (
         <CheckoutSkeleton />
+      ) : placing ? (
+        <div role="status" className="card mt-6 px-6 py-10 text-center">
+          <p className="font-heading text-xl font-bold text-heading">Placing your order…</p>
+          <p className="mt-1 text-sm text-muted">Please wait a moment.</p>
+        </div>
       ) : totals.itemCount === 0 ? (
         <div className="card mt-6 px-6 py-10 text-center">
           <p aria-hidden="true" className="text-5xl">
@@ -133,10 +199,26 @@ export default function CheckoutView() {
           {blocked.length > 0 && (
             <p role="alert" className="mt-4 rounded-field border border-line bg-tint px-4 py-3 text-sm font-semibold text-redtext">
               {blocked.length} {blocked.length === 1 ? "item" : "items"} in your cart can&apos;t be bought right
-              now and {blocked.length === 1 ? "is" : "are"} not included.{" "}
+              now. Remove {blocked.length === 1 ? "it" : "them"} in your cart before placing your order.{" "}
               <Link href="/cart" className="underline">
                 Go to cart
               </Link>
+            </p>
+          )}
+
+          {placeError && (
+            <p
+              id="co-place-error"
+              tabIndex={-1}
+              role="alert"
+              className="mt-4 rounded-field border border-line bg-tint px-4 py-3 text-sm font-semibold text-redtext outline-none"
+            >
+              {placeError.text}{" "}
+              {placeError.toCart && (
+                <Link href="/cart" className="underline">
+                  Go to cart
+                </Link>
+              )}
             </p>
           )}
 
@@ -355,13 +437,48 @@ export default function CheckoutView() {
                 )}
               </section>
 
-              {/* ---------- 3. Payment (comes in Step E2) ---------- */}
+              {/* ---------- 3. Payment ---------- */}
               <section aria-labelledby="sec-payment" className="card p-5">
                 <SectionTitle id="sec-payment" n={3}>
                   Payment
                 </SectionTitle>
-                <p className="mt-3 text-sm text-muted">
-                  You will choose how to pay here in the next update. No payment details are asked on this site.
+                {/* Only a list to choose from. The site never asks for card, UPI or bank details. */}
+                <fieldset aria-describedby={paymentError ? "co-payment-error" : undefined} className="mt-4">
+                  <legend className="sr-only">Payment method</legend>
+                  <div className="space-y-3">
+                    {PAYMENT_METHODS.map((m, i) => (
+                      <label
+                        key={m.id}
+                        className={`flex cursor-pointer items-start gap-3 rounded-field border p-4 ${
+                          payment === m.id ? "border-brand-red-dark bg-tint" : "border-line"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="payment"
+                          id={i === 0 ? "co-payment-first" : undefined}
+                          value={m.id}
+                          checked={payment === m.id}
+                          onChange={() => {
+                            setPayment(m.id);
+                            setPaymentError("");
+                          }}
+                          className="mt-1 h-4 w-4 accent-brand-red-dark"
+                        />
+                        <span className="min-w-0 flex-1">
+                          <span className="block font-semibold text-ink">{m.label}</span>
+                          <span className="block text-sm text-muted">{m.description}</span>
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  <p id="co-payment-error" className="min-h-5 pt-1 text-xs font-semibold text-redtext">
+                    {paymentError}
+                  </p>
+                </fieldset>
+                <p className="mt-2 text-xs text-muted">
+                  Real online payment (UPI, card, net banking, wallets) will be switched on with Razorpay. It
+                  opens its own secure window, so this site never asks for your card, UPI or bank details.
                 </p>
               </section>
 
